@@ -12,6 +12,7 @@
   python3,
   lib,
   stdenv,
+  libseccomp,
   systemdLibs,
   xkeyboard_config,
   libxrandr,
@@ -23,13 +24,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon-desktop";
-  version = "6.6.2";
+  version = "6.8.0";
 
   src = fetchFromGitHub {
     owner = "linuxmint";
     repo = "cinnamon-desktop";
     tag = finalAttrs.version;
-    hash = "sha256-AcUJ9anKuvUAJKaQVHbkYShmrlSHG35gV/NIkPgJojk=";
+    hash = "sha256-E8mvVfdilMV0J01C8oUqRKuAx8mjHrMNMXSEioeCoRw=";
   };
 
   outputs = [
@@ -44,6 +45,8 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildInputs = [
+
+    libseccomp
     gdk-pixbuf
     isocodes
     systemdLibs

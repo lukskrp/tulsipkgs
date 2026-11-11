@@ -2,7 +2,6 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  replaceVars,
   cairo,
   cinnamon-desktop,
   dbus,
@@ -38,12 +37,11 @@
   wrapGAppsHook3,
   xorg-server,
   xwayland,
-  zenity,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "muffin";
-  version = "6.6.3";
+  version = "6.8.1";
 
   outputs = [
     "out"
@@ -55,14 +53,8 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "linuxmint";
     repo = "muffin";
     rev = finalAttrs.version;
-    hash = "sha256-PNL6PAZinds+kqCUCesJkTS+93juhm35sPE7RFUdxeU=";
+    hash = "sha256-GHmv612v9U5H491p4W928ewvxTeIdLk30U2lfepVkKo=";
   };
-
-  patches = [
-    (replaceVars ./fix-paths.patch {
-      inherit zenity;
-    })
-  ];
 
   nativeBuildInputs = [
     desktop-file-utils
@@ -113,6 +105,8 @@ stdenv.mkDerivation (finalAttrs: {
     # Based on Mint's debian/rules.
     "-Dwayland_eglstream=true"
     "-Dxwayland_path=${lib.getExe xwayland}"
+    # Its udev rules go in its own output; the NixOS cinnamon module adds it to services.udev.packages.
+    "-Dudev_dir=${placeholder "out"}/lib/udev"
   ];
 
   postPatch = ''

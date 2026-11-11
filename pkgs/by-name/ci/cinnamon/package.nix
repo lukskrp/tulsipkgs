@@ -10,7 +10,6 @@
   cjs,
   evolution-data-server,
   fetchFromGitHub,
-  fetchpatch,
   gcr_3,
   gdk-pixbuf,
   gettext,
@@ -32,6 +31,10 @@
   polkit,
   lib,
   stdenv,
+  pam,
+  xdotool,
+  gtk4,
+  gtk4-layer-shell,
   wrapGAppsHook3,
   libxml2,
   gtk-doc,
@@ -76,27 +79,29 @@ in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
   # TulsiOS: Ocimum Desktop, a fork of Cinnamon 6.6.9 (branch "ocimum", see its OCIMUM.md).
-  version = "6.6.9-ocimum.1";
+  version = "6.8.0-ocimum.1";
 
   src = fetchFromGitHub {
     owner = "lukskrp";
     repo = "ocimum-desktop";
-    rev = "5a84782d97190839b86f1cfd45df8f7f4e8473eb";
-    hash = "sha256-sNVxOazQl5h9CUCIGbvdPYD6BnnYOAeiSqEdmVN7gT8=";
+    rev = "e5952e3ecbba83401dcb0838f25a6996faed316a";
+    hash = "sha256-6QlbntPFbreGNulQ0pZFh+CeKxoAcH8jb0teEcCFCzs=";
   };
 
   patches = [
     ./use-sane-install-dir.patch
     ./libdir.patch
-
-    # util.js: Adapt to GIR 2.0
-    (fetchpatch {
-      url = "https://github.com/linuxmint/cinnamon/commit/3a2d558aa575f0ea364c5b4e30d2eb3ee604ee58.patch";
-      hash = "sha256-+uAGuQJ0VsIvMvPFafyoXmU4MiHfbbRXLzeW/n62ucw=";
-    })
   ];
 
   buildInputs = [
+
+
+
+    pam
+    xdotool
+    # 6.8 background daemon (per-monitor wallpapers) is GTK 4; the shell itself stays GTK 3.
+    gtk4
+    gtk4-layer-shell
     atk
     cacert
     cinnamon-control-center
@@ -154,8 +159,12 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
   ];
 
+  # Systemd user units go in this package; the NixOS cinnamon module adds it to systemd.packages.
+  env.PKG_CONFIG_SYSTEMD_SYSTEMDUSERUNITDIR = "${placeholder "out"}/lib/systemd/user";
+
   postPatch = ''
-    find . -type f -exec sed -i \
+    # Not meson.build: since 6.8 it names source paths like files/usr/share/cinnamon/….
+    find . -type f ! -name meson.build -exec sed -i \
       -e s,/usr/share/cinnamon,$out/share/cinnamon,g \
       -e s,/usr/share/locale,/run/current-system/sw/share/locale,g \
       {} +
@@ -168,19 +177,16 @@ stdenv.mkDerivation (finalAttrs: {
     pushd ./files/usr/share/cinnamon/cinnamon-settings
       substituteInPlace ./bin/capi.py                     --replace-fail '"/usr/lib"' '"${cinnamon-control-center}/lib"'
       substituteInPlace ./bin/SettingsWidgets.py          --replace-fail "/usr/share/sounds" "/run/current-system/sw/share/sounds"
-      substituteInPlace ./bin/Spices.py                   --replace-fail "subprocess.run(['/usr/bin/" "subprocess.run(['" \
-                                                          --replace-fail 'subprocess.run(["/usr/bin/' 'subprocess.run(["' \
-                                                          --replace-fail "msgfmt" "${gettext}/bin/msgfmt"
+      substituteInPlace ./bin/Spices.py                   --replace-fail "subprocess.run(['/usr/bin/" "subprocess.run(['"
       substituteInPlace ./modules/cs_info.py              --replace-fail "lspci" "${pciutils}/bin/lspci"
       substituteInPlace ./modules/cs_themes.py            --replace-fail "$out/share/cinnamon/styles.d" "/run/current-system/sw/share/cinnamon/styles.d"
       substituteInPlace ./modules/cs_user.py              --replace-fail "/usr/bin/passwd" "/run/wrappers/bin/passwd"
     popd
 
-    # In preFixup we make these executable.
-    substituteInPlace ./files/usr/share/cinnamon/applets/printers@cinnamon.org/applet.js \
-      --replace-fail "Util.spawn_async(['python3'," "Util.spawn_async(["
+    substituteInPlace ./files/usr/bin/cinnamon-xlet-makepot \
+      --replace-fail '["msgfmt",' '["${gettext}/bin/msgfmt",'
 
-    substituteInPlace ./files/usr/bin/cinnamon-session-{cinnamon,cinnamon2d} \
+    substituteInPlace ./files/usr/bin/cinnamon-session-cinnamon \
       --replace-fail "exec cinnamon-session" "exec ${cinnamon-session}/bin/cinnamon-session"
 
     patchShebangs src/data-to-c.pl
@@ -202,16 +208,11 @@ stdenv.mkDerivation (finalAttrs: {
 
     # Called as `pkexec cinnamon-settings-users.py`.
     wrapGApp $out/share/cinnamon/cinnamon-settings-users/cinnamon-settings-users.py
-
-    # postPatch touches both but we mainly want to wrap cancel-print-dialog.
-    chmod +x $out/share/cinnamon/applets/printers@cinnamon.org/{cancel-print-dialog,lpstat-a}.py
-    wrapGApp $out/share/cinnamon/applets/printers@cinnamon.org/cancel-print-dialog.py
   '';
 
   passthru = {
     providedSessions = [
       "cinnamon"
-      "cinnamon2d"
       "cinnamon-wayland"
     ];
   };

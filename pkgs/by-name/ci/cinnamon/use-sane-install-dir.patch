@@ -1,33 +1,33 @@
-From f7e802959d7a5c217ed574cab30404fc769f174d Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Maciej=20Kr=C3=BCger?= <mkg20001@gmail.com>
-Date: Sat, 6 Feb 2021 14:26:26 +0100
-Subject: [PATCH] use sane install dir
+Install files/usr and files/etc under the prefix instead of /.
+Regenerated for Cinnamon 6.8, which excludes files from that install.
 
----
- meson.build | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/meson.build b/meson.build
-index bd803f20..3c1e9a4f 100644
---- a/meson.build
-+++ b/meson.build
-@@ -127,8 +127,14 @@ configure_file(
- )
+--- a/meson.build	2026-11-12 00:39:20.702872860 +0200
++++ b/meson.build	2026-11-12 00:39:20.753130396 +0200
+@@ -267,11 +267,24 @@
+     excluded_files += ['usr/share/cinnamon/cinnamon-settings/modules/cs_user.py']
+ endif
  
- install_subdir(
--    'files',
--    install_dir: '/',
++# NixOS: install files/usr into the prefix and files/etc into prefix/etc
++# instead of the filesystem root.
++excluded_usr_files = []
++foreach f : excluded_files
++    excluded_usr_files += f.substring(4)  # strip 'usr/'
++endforeach
++
++install_subdir(
 +    'files/usr',
 +    install_dir: get_option('prefix'),
 +    strip_directory: true,
++    exclude_files : excluded_usr_files
 +)
 +
-+install_subdir(
+ install_subdir(
+-    'files',
+-    install_dir: '/',
 +    'files/etc',
 +    install_dir: join_paths(get_option('prefix'), 'etc'),
      strip_directory: true,
+-    exclude_files : excluded_files
  )
  
--- 
-2.30.0
-
+ session_files = ['cinnamon.session']

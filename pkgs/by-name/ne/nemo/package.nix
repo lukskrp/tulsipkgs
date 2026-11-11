@@ -7,6 +7,7 @@
   pkg-config,
   lib,
   stdenv,
+  gst_all_1,
   wrapGAppsHook3,
   libxmlb,
   gtk3,
@@ -37,13 +38,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "nemo";
-  version = "6.6.4";
+  version = "6.8.3";
 
   src = fetchFromGitHub {
     owner = "linuxmint";
     repo = "nemo";
     rev = finalAttrs.version;
-    hash = "sha256-HYrpq22rWScdweDQQlrQbOShYFH4FjZWQKBnvKIsOAI=";
+    hash = "sha256-jIe0ETErvUzF5miKa5zHbPltiQ7wZQfr7zpTLp6xGoA=";
   };
 
   patches = [
@@ -59,6 +60,9 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildInputs = [
+
+    gst_all_1.gstreamer
+    gst_all_1.gst-plugins-base
     glib
     gtk3
     cinnamon-desktop

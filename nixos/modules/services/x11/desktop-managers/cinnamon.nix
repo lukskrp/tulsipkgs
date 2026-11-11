@@ -126,6 +126,8 @@ in
         with pkgs;
         [
           cinnamon-session
+          # 6.8: user unit of the background daemon
+          cinnamon
         ]
         ++ utils.removePackagesByName [
           xdg-user-dirs # Update user dirs as described in https://freedesktop.org/wiki/Software/xdg-user-dirs/
@@ -138,6 +140,8 @@ in
       services.gnome.gnome-online-accounts.enable = mkDefault true;
       services.gnome.gcr-ssh-agent.enable = mkDefault true;
       services.gvfs.enable = true;
+      # muffin 6.8 tags GPUs for the Wayland session (61-muffin.rules).
+      services.udev.packages = [ pkgs.muffin ];
       services.power-profiles-daemon.enable = mkDefault true;
       services.switcherooControl.enable = mkDefault true; # xapp-gpu-offload-helper
       services.touchegg.enable = mkDefault true;
@@ -159,6 +163,8 @@ in
       # Fix lockscreen
       security.pam.services = {
         cinnamon-screensaver = { };
+        # 6.8: the screen locker built into Cinnamon authenticates as "cinnamon".
+        cinnamon = { };
       };
 
       environment.systemPackages =

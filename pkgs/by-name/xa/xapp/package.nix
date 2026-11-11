@@ -13,6 +13,7 @@
   python3,
   lib,
   stdenv,
+  gtk-layer-shell,
   vala,
   wrapGAppsHook3,
   file,
@@ -24,7 +25,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "xapp";
-  version = "3.2.3";
+  version = "3.4.0";
 
   outputs = [
     "out"
@@ -35,7 +36,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "linuxmint";
     repo = "xapp";
     rev = finalAttrs.version;
-    hash = "sha256-WisSymt3l+bt02aUy+SaqDa5S9V+xxgy8mkFQfB+shM=";
+    hash = "sha256-IVh6TQvzqa59ZEdb1XVWv+ruD+9pYko0dujTbpv2v+U=";
   };
 
   # Recommended by upstream, which enables the build of xapp-debug.
@@ -53,6 +54,8 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildInputs = [
+
+    gtk-layer-shell
     (python3.withPackages (
       ps: with ps; [
         pygobject3

@@ -39,13 +39,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon-session";
-  version = "6.6.4";
+  version = "6.8.0";
 
   src = fetchFromGitHub {
     owner = "linuxmint";
     repo = "cinnamon-session";
     tag = finalAttrs.version;
-    hash = "sha256-rx7+tBXQ9kvnRYNxgF1QXyhk9NamUIjti/6GGrACYU0=";
+    hash = "sha256-DAJpmnWRYSJNUQ6S5jxQM5IrnbdImVQ/CR5UAAOcQG4=";
   };
 
   buildInputs = [
@@ -82,6 +82,9 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     libxslt
   ];
+
+  # Systemd user units go in this package; the NixOS cinnamon module adds it to systemd.packages.
+  env.PKG_CONFIG_SYSTEMD_SYSTEMDUSERUNITDIR = "${placeholder "out"}/lib/systemd/user";
 
   mesonFlags = [
     # use locales from cinnamon-translations

@@ -19,20 +19,12 @@ let
 in
 {
   built = {
-    # Ocimum Desktop and what depends on it
-    inherit (pkgs) cinnamon cinnamon-gsettings-overrides cinnamon-screensaver;
-    # GTK3-O and its ABI guard
-    inherit (pkgs) gtk3-o;
-    gtk3-o-abi = pkgs.gtk3-o.abiCheck;
-    # OTK, the ABI-breaking toolkit that installs alongside GTK 3
-    inherit (pkgs) otk;
-  };
-
-  curated = lib.recurseIntoAttrs {
-    # The rest of the Cinnamon suite (upstream until forked)
+    # Ocimum Desktop and the Cinnamon 6.8 suite it needs (nixpkgs ships 6.6)
     inherit (pkgs)
+      cinnamon
+      cinnamon-gsettings-overrides
+      cinnamon-screensaver
       muffin
-      cjs
       cinnamon-desktop
       cinnamon-menus
       cinnamon-session
@@ -41,6 +33,19 @@ in
       cinnamon-translations
       nemo
       xapp
+      xdg-desktop-portal-xapp
+      ;
+    # GTK3-O and its ABI guard
+    inherit (pkgs) gtk3-o;
+    gtk3-o-abi = pkgs.gtk3-o.abiCheck;
+    # OTK, the ABI-breaking toolkit that installs alongside GTK 3
+    inherit (pkgs) otk;
+  };
+
+  curated = lib.recurseIntoAttrs {
+    # Parts of the Cinnamon desktop taken unchanged from upstream
+    inherit (pkgs)
+      cjs
       mint-themes
       mint-y-icons
       ;
