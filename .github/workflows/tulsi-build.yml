@@ -1,0 +1,55 @@
+# TulsiOS: build what tulsipkgs changes and push it to the TulsiOS binary cache.
+name: tulsi-build
+
+on:
+  push:
+    branches: ["tulsi-*"]
+  pull_request:
+    branches: ["tulsi-*"]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tulsi-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      ATTIC_ENDPOINT: ${{ secrets.ATTIC_ENDPOINT }}
+      ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
+      TULSI_CACHE_KEY: ${{ vars.TULSI_CACHE_PUBLIC_KEY }}
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            max-jobs = auto
+            extra-substituters = ${{ vars.TULSI_CACHE_PUBLIC_KEY && 'https://cache.skarptech.org/tulsi' || '' }}
+            extra-trusted-public-keys = ${{ vars.TULSI_CACHE_PUBLIC_KEY }}
+
+      - name: Build what TulsiOS changes
+        run: nix-build pkgs/top-level/tulsi-release.nix -A built --out-link result --keep-going
+
+      - name: The curated suite must come from cache.nixos.org
+        run: ci/tulsi/check-upstream.sh
+
+      - name: Push to cache.skarptech.org
+        if: ${{ github.event_name != 'pull_request' && env.ATTIC_TOKEN != '' }}
+        run: |
+          attic=$(nix-build -A attic-client --no-out-link)/bin/attic
+          "$attic" login tulsi "$ATTIC_ENDPOINT" "$ATTIC_TOKEN"
+          "$attic" push tulsi:tulsi result*
