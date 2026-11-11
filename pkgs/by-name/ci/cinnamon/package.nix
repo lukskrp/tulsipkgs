@@ -75,13 +75,14 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
-  version = "6.6.9";
+  # TulsiOS: Ocimum Desktop, a fork of Cinnamon 6.6.9 (branch "ocimum", see its OCIMUM.md).
+  version = "6.6.9-ocimum.1";
 
   src = fetchFromGitHub {
-    owner = "linuxmint";
-    repo = "cinnamon";
-    tag = finalAttrs.version;
-    hash = "sha256-RQsgfPvdt1xe7HhZamynAvATVlBeLLElatjpN1Tgt2M=";
+    owner = "lukskrp";
+    repo = "ocimum-desktop";
+    rev = "5a84782d97190839b86f1cfd45df8f7f4e8473eb";
+    hash = "sha256-sNVxOazQl5h9CUCIGbvdPYD6BnnYOAeiSqEdmVN7gT8=";
   };
 
   patches = [
