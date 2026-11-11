@@ -8,8 +8,15 @@ set -euo pipefail
 release=pkgs/top-level/tulsi-release.nix
 name() { sed 's|.*/[a-z0-9]\{32\}-||; s|\.drv$||'; }
 
-mapfile -t ours < <(nix-instantiate "$release" -A built 2>/dev/null)
-mapfile -t curated < <(nix-instantiate "$release" -A curated 2>/dev/null)
+# Command substitution (not process substitution) so an evaluation error fails the check.
+built_drvs=$(nix-instantiate "$release" -A built)
+curated_drvs=$(nix-instantiate "$release" -A curated)
+mapfile -t ours <<<"$built_drvs"
+mapfile -t curated <<<"$curated_drvs"
+if [ -z "$built_drvs" ] || [ -z "$curated_drvs" ]; then
+  echo "ERROR: $release evaluated to an empty set" >&2
+  exit 1
+fi
 echo "Checking ${#curated[@]} curated packages against ${#ours[@]} TulsiOS-built ones."
 
 failed=0

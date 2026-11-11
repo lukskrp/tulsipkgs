@@ -24,6 +24,8 @@ in
     # GTK3-O and its ABI guard
     inherit (pkgs) gtk3-o;
     gtk3-o-abi = pkgs.gtk3-o.abiCheck;
+    # OTK, the ABI-breaking toolkit that installs alongside GTK 3
+    inherit (pkgs) otk;
   };
 
   curated = lib.recurseIntoAttrs {
