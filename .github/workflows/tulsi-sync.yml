@@ -21,10 +21,14 @@ jobs:
       - name: Free disk space
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
 
+      # Full history, but no file contents until needed (blob:none): a shallow
+      # history hides the real merge base, and git then invents conflicts in
+      # files TulsiOS never touched.
       - uses: actions/checkout@v4
         with:
           ref: tulsi-unstable
-          fetch-depth: 300
+          fetch-depth: 0
+          filter: blob:none
           token: ${{ secrets.SYNC_TOKEN }}
 
       - name: Merge upstream nixos-unstable
@@ -33,17 +37,21 @@ jobs:
           git config user.name "tulsi-sync"
           git config user.email "tulsi-sync@users.noreply.github.com"
           git remote add upstream https://github.com/NixOS/nixpkgs.git
-          git fetch --depth=300 upstream nixos-unstable
-          # Deepen until the merge base is in the shallow history.
-          for i in 1 2 3 4 5 6 7 8; do
-            git merge-base HEAD upstream/nixos-unstable >/dev/null 2>&1 && break
-            git fetch --deepen=2000 upstream nixos-unstable
-            git fetch --deepen=300 origin tulsi-unstable
-          done
-          if git merge-base --is-ancestor upstream/nixos-unstable HEAD; then
+          git fetch --filter=blob:none upstream nixos-unstable
+          UP=upstream/nixos-unstable
+          if git merge-base --is-ancestor "$UP" HEAD; then
             echo "Already up to date."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          if git merge --no-edit -m "Merge upstream nixos-unstable $(git rev-parse --short upstream/nixos-unstable)" upstream/nixos-unstable; then
+          # Files TulsiOS changes relative to upstream, before the merge.
+          git diff --name-only "$(git merge-base HEAD "$UP")" HEAD | sort > ours.txt
+          if git merge --no-edit -m "Merge upstream nixos-unstable $(git rev-parse --short "$UP")" "$UP"; then
+            # After a correct merge, only TulsiOS's own files differ from upstream.
+            git diff --name-only "$UP" HEAD | sort > after.txt
+            if [ -n "$(comm -13 ours.txt after.txt)" ]; then
+              echo "::error::The merge differs from upstream in files TulsiOS does not change:"
+              comm -13 ours.txt after.txt
+              exit 1
+            fi
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             git diff --name-only --diff-filter=U > conflicts.txt

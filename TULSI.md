@@ -9,10 +9,15 @@ software (Ocimum Desktop, GTK3-O, …) and an opinionated app suite.
 | Branch | What it is |
 |---|---|
 | `master` | Untouched mirror of upstream nixpkgs `master` |
-| **`tulsi-unstable`** | **The TulsiOS distribution branch**: upstream `nixos-unstable` + TulsiOS commits. TulsiOS systems use this. |
+| **`tulsi-unstable`** | **The TulsiOS distribution branch** and the repository's default branch: upstream `nixos-unstable` + TulsiOS commits. TulsiOS systems use this. |
 
 `tulsi-sync` merges upstream `nixos-unstable` into `tulsi-unstable` every day. The merge is
-pushed only if the TulsiOS packages still build. Conflicts open an issue.
+pushed only if the TulsiOS packages still build and, compared with upstream, only the files
+TulsiOS changes differ. Conflicts open an issue. `tulsi-unstable` must stay the default
+branch: GitHub runs scheduled workflows only from the default branch.
+
+Merge with full history (`git clone --filter=blob:none` keeps it small). In a shallow clone
+git cannot see the real merge base and reports conflicts in files TulsiOS never touched.
 
 ## The rule that keeps the fork affordable
 
