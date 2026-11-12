@@ -50,6 +50,11 @@ let
     theme-variant='dark'
     unified-menu=false
 
+    # TulsiOS: mint-artwork sets the menu icon to Cinnamon's; keep Ocimum's
+    # (the default in Ocimum Desktop's own schema).
+    [org.cinnamon]
+    app-menu-icon-name='ocimum-symbolic'
+
     ${extraGSettingsOverrides}
   '';
 in
