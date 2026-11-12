@@ -18,13 +18,13 @@ in
 base.overrideAttrs (
   finalAttrs: old: {
     pname = "otk";
-    version = "3.24.52-otk.1";
+    version = "3.24.52-otk.2";
 
     src = fetchFromGitHub {
       owner = "lukskrp";
       repo = "OTK";
-      rev = "55da1a7b70d5c2c754a4360cdda39aca3be6db1d";
-      hash = "sha256-cnhZ7JRXsCWMrvFqQffx5yhIf+K67VY0yblLQ9ceeRI=";
+      rev = "99f82d69a561242b5893b057ebc08255e9202ba1";
+      hash = "sha256-UTlus6sbpc2ZdfTbv3IYuNQw3JeA6tV4gyFp6L3Apac=";
     };
 
     # OTK carries its own NixOS input-method lookup (etc/otk-3.0), so the

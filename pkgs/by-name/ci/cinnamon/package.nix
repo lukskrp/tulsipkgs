@@ -33,8 +33,7 @@
   stdenv,
   pam,
   xdotool,
-  gtk4,
-  gtk4-layer-shell,
+  otk,
   wrapGAppsHook3,
   libxml2,
   gtk-doc,
@@ -78,14 +77,14 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
-  # TulsiOS: Ocimum Desktop, a fork of Cinnamon 6.6.9 (branch "ocimum", see its OCIMUM.md).
-  version = "6.8.0-ocimum.1";
+  # TulsiOS: Ocimum Desktop, a hard fork of Cinnamon 6.8 (branch "ocimum", see its OCIMUM.md).
+  version = "6.8.0-ocimum.2";
 
   src = fetchFromGitHub {
     owner = "lukskrp";
     repo = "ocimum-desktop";
-    rev = "e5952e3ecbba83401dcb0838f25a6996faed316a";
-    hash = "sha256-6QlbntPFbreGNulQ0pZFh+CeKxoAcH8jb0teEcCFCzs=";
+    rev = "5a15b7bb85a628222e5a92697fb6b324e8e7dbcf";
+    hash = "sha256-MgEwmaOXz86SCLD7Ki32w3ImNjV3A+LYzyV1H8OPIQc=";
   };
 
   patches = [
@@ -95,13 +94,10 @@ stdenv.mkDerivation (finalAttrs: {
 
   buildInputs = [
 
-
-
     pam
     xdotool
-    # 6.8 background daemon (per-monitor wallpapers) is GTK 4; the shell itself stays GTK 3.
-    gtk4
-    gtk4-layer-shell
+    # The 6.8 background daemon (per-monitor wallpapers) is built with OTK; the shell is GTK 3.
+    otk
     atk
     cacert
     cinnamon-control-center
@@ -159,6 +155,9 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
   ];
 
+  # Ocimum is X11-only (XLibre).
+  mesonFlags = [ "-Dwayland=false" ];
+
   # Systemd user units go in this package; the NixOS cinnamon module adds it to systemd.packages.
   env.PKG_CONFIG_SYSTEMD_SYSTEMDUSERUNITDIR = "${placeholder "out"}/lib/systemd/user";
 
@@ -211,10 +210,7 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru = {
-    providedSessions = [
-      "cinnamon"
-      "cinnamon-wayland"
-    ];
+    providedSessions = [ "cinnamon" ];
   };
 
   meta = {
