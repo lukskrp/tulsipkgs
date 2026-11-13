@@ -5,8 +5,12 @@
 # The build recipe is nixpkgs' gtk3 with OTK's names.
 #
 # OSK, the Ocimum Scene Kit (libosk-3, osk-3.0, Osk-3.0), is built with it: GTK 4's
-# rendering engine as an OTK module (OTK.md). Its tests (GTK 4's GSK tests, Cairo
-# renderer) need no display and run in the build.
+# rendering engine as an OTK module, with GtkSnapshot (OTK.md). Its tests (GTK 4's GSK
+# tests, Cairo renderer, including the GtkSnapshot replay variant) need no display and
+# run in the build.
+#
+# OTK 2 (otk.4) broke the ABI: GtkWidgetClass gained `snapshot`, so libotk-3 is .so.1
+# and OTK_RENDERER=legacy|cairo selects how windows are painted.
 {
   lib,
   gtk3,
@@ -27,13 +31,13 @@ in
 base.overrideAttrs (
   finalAttrs: old: {
     pname = "otk";
-    version = "3.24.52-otk.3";
+    version = "3.24.52-otk.4";
 
     src = fetchFromGitHub {
       owner = "lukskrp";
       repo = "OTK";
-      rev = "3107e7dbcca8acccc43d3bbdda760b6817863b88";
-      hash = "sha256-lKXcb0OFr6FxR+ou6G9pOWnlFyJ1ZfjfGMQnOFQbE0Q=";
+      rev = "055d2eaffcd17737fabfaae86e457fe9c27b9bcc";
+      hash = "sha256-lT7QUmWsugLtNyc8fCrzQWHfzZZnMPB7NKT+LrHzRvc=";
     };
 
     # OTK carries its own NixOS input-method lookup (etc/otk-3.0), so the
