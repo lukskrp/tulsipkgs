@@ -161,6 +161,9 @@ let
       "The following attributes were defined both in `pkgs/top-level/all-packages.nix` and elsewhere, most likely in `pkgs/by-name/`: ${lib.concatStringsSep ", " (lib.attrNames conflictingAttrs)}";
     res;
 
+  # TulsiOS: packages tulsipkgs replaces in place (TULSI.md)
+  tulsiOverrides = self: super: import ./tulsi-overrides.nix { inherit lib; } self super;
+
   aliases = self: super: lib.optionalAttrs config.allowAliases (import ./aliases.nix lib self super);
 
   variants =
@@ -364,6 +367,7 @@ let
       splice
       autoCalledPackages
       allPackages
+      tulsiOverrides
       otherPackageSets
       aliases
       variants

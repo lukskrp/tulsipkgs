@@ -43,6 +43,8 @@ have to be built.
 |---|---|
 | `pkgs/by-name/ci/cinnamon/package.nix` | Source → [ocimum-desktop](https://github.com/lukskrp/ocimum-desktop) branch `ocimum` (Ocimum Desktop) |
 | `pkgs/by-name/gt/gtk3-o/` | GTK3-O (grafted system-wide by TulsiOS, never replaces `gtk3`) |
+| `pkgs/by-name/xl/xlibre-xserver/` | [XLibre](https://github.com/X11Libre/xserver), the X server, and the table of XLibre's `xf86-*` driver forks (`drivers.nix`) |
+| `pkgs/top-level/tulsi-overrides.nix`, 2 lines in `pkgs/top-level/stage.nix` | Packages replaced in place: `xorg-server` = XLibre (Xorg 21.1 stays as `xorg-server-xorg`, used by `tigervnc` and `xvfb`), every `xf86-*` driver = its XLibre fork |
 | `pkgs/by-name/ot/otk/` | [OTK](https://github.com/lukskrp/OTK), the ABI-breaking GTK 3 fork (side by side with `gtk3`), with OSK (`libosk-3`, GTK 4's rendering engine) |
 | `pkgs/top-level/tulsi-release.nix` | What CI builds (`built`) and what must stay upstream (`curated`) |
 | `.github/workflows/tulsi-*.yml`, `ci/tulsi/` | Build + cache, daily upstream sync |
@@ -57,6 +59,13 @@ Keep this table up to date: it is the list of files a sync conflict can touch.
 **Update Ocimum Desktop**: push to `ocimum-desktop`'s `ocimum` branch, then update `rev` and
 `hash` in `pkgs/by-name/ci/cinnamon/package.nix`
 (`nix flake prefetch github:lukskrp/ocimum-desktop/<rev>` prints the hash).
+
+**Update XLibre or a driver**: XLibre's `version`/`hash` are in
+`pkgs/by-name/xl/xlibre-xserver/package.nix`, the drivers' in `drivers.nix` there (newest
+`xlibre-<name>-<version>` tag of `github.com/X11Libre/<name>`; `nix flake prefetch
+github:X11Libre/<name>/<tag>` prints the hash). A new XLibre major version changes the driver
+ABI: update all drivers with it. nixpkgs' own `xorg-server` and `xf86-*` files stay
+untouched, so upstream changes to them merge without conflicts.
 
 **Upstream sync conflict**:
 ```sh

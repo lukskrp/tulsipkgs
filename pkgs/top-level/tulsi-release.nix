@@ -40,7 +40,14 @@ in
     gtk3-o-abi = pkgs.gtk3-o.abiCheck;
     # OTK, the ABI-breaking toolkit that installs alongside GTK 3
     inherit (pkgs) otk;
-  };
+    # XLibre, the X server (pkgs/top-level/tulsi-overrides.nix), with XLibre's driver
+    # forks and what is built against it
+    inherit (pkgs) xorg-server xinit;
+  }
+  // lib.filterAttrs (
+    # drivers nixpkgs does not build on this platform or that are unfree
+    _: drv: (builtins.tryEval drv.drvPath).success
+  ) (lib.genAttrs (lib.attrNames (import ../by-name/xl/xlibre-xserver/drivers.nix)) (n: pkgs.${n}));
 
   curated = lib.recurseIntoAttrs {
     # Parts of the Cinnamon desktop taken unchanged from upstream
