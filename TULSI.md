@@ -43,7 +43,7 @@ have to be built.
 |---|---|
 | `pkgs/by-name/ci/cinnamon/package.nix` | Source → [ocimum-desktop](https://github.com/lukskrp/ocimum-desktop) branch `ocimum` (Ocimum Desktop) |
 | `pkgs/by-name/gt/gtk3-o/` | GTK3-O (grafted system-wide by TulsiOS, never replaces `gtk3`) |
-| `pkgs/by-name/ot/otk/` | [OTK](https://github.com/lukskrp/OTK), the ABI-breaking GTK 3 fork (side by side with `gtk3`) |
+| `pkgs/by-name/ot/otk/` | [OTK](https://github.com/lukskrp/OTK), the ABI-breaking GTK 3 fork (side by side with `gtk3`), with OSK (`libosk-3`, GTK 4's rendering engine) |
 | `pkgs/top-level/tulsi-release.nix` | What CI builds (`built`) and what must stay upstream (`curated`) |
 | `.github/workflows/tulsi-*.yml`, `ci/tulsi/` | Build + cache, daily upstream sync |
 | `TULSI.md` | This file |

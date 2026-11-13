@@ -3,9 +3,18 @@
 # names (libotk-3, otk-3.0.pc, Otk-3.0 typelib, lib/otk-3.0 modules), so stock
 # GTK 3 applications never load it; only applications built against OTK do.
 # The build recipe is nixpkgs' gtk3 with OTK's names.
+#
+# OSK, the Ocimum Scene Kit (libosk-3, osk-3.0, Osk-3.0), is built with it: GTK 4's
+# rendering engine as an OTK module (OTK.md). Its tests (GTK 4's GSK tests, Cairo
+# renderer) need no display and run in the build.
 {
   lib,
   gtk3,
+  graphene,
+  harfbuzz,
+  libjpeg,
+  libpng,
+  libtiff,
   replaceVars,
   fetchFromGitHub,
   shared-mime-info,
@@ -18,13 +27,13 @@ in
 base.overrideAttrs (
   finalAttrs: old: {
     pname = "otk";
-    version = "3.24.52-otk.2";
+    version = "3.24.52-otk.3";
 
     src = fetchFromGitHub {
       owner = "lukskrp";
       repo = "OTK";
-      rev = "99f82d69a561242b5893b057ebc08255e9202ba1";
-      hash = "sha256-UTlus6sbpc2ZdfTbv3IYuNQw3JeA6tV4gyFp6L3Apac=";
+      rev = "3107e7dbcca8acccc43d3bbdda760b6817863b88";
+      hash = "sha256-lKXcb0OFr6FxR+ou6G9pOWnlFyJ1ZfjfGMQnOFQbE0Q=";
     };
 
     # OTK carries its own NixOS input-method lookup (etc/otk-3.0), so the
@@ -36,14 +45,32 @@ base.overrideAttrs (
       "out"
       "dev"
     ];
+    buildInputs = old.buildInputs ++ [
+      graphene
+      harfbuzz
+      libjpeg
+      libpng
+      libtiff
+    ];
+
     mesonFlags =
       (lib.filter (f: !(lib.hasPrefix "-Dgtk_doc=" f)) old.mesonFlags)
       ++ [
+        "-Dosk=enabled"
+        "-Dosk_tests=true"
         "-Dgtk_doc=false"
         "-Ddemos=false"
         "-Dexamples=false"
         "-Dman=false"
       ];
+
+    # GTK 3's own tests need X11 and are off (-Dtests=false); OSK's run headless.
+    doCheck = true;
+    checkPhase = ''
+      runHook preCheck
+      meson test --suite osk --no-suite failing --print-errorlogs --num-processes $NIX_BUILD_CORES
+      runHook postCheck
+    '';
 
     setupHooks = [
       (gtk3Dir + "/hooks/drop-icon-theme-cache.sh")
@@ -76,6 +103,7 @@ base.overrideAttrs (
       pkgConfigModules = [
         "otk-3.0"
         "odk-3.0"
+        "osk-3.0"
         "otk-x11-3.0"
         "odk-x11-3.0"
         "otk-wayland-3.0"
