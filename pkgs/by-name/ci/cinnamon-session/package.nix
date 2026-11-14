@@ -4,6 +4,7 @@
   cinnamon-settings-daemon,
   cinnamon-translations,
   glib,
+  gobject-introspection,
   gsettings-desktop-schemas,
   gtk3,
   libcanberra,
@@ -76,6 +77,10 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     meson
     ninja
+    # cinnamon-session-quit is Python + PyGObject (Gtk, XApp): gobject-introspection's
+    # setup hook collects the typelibs of buildInputs into GI_TYPELIB_PATH, which
+    # wrapGAppsHook3 then puts in the wrapper. Without it: "Namespace Gtk not available".
+    gobject-introspection
     wrapGAppsHook3
     libexecinfo
     python3

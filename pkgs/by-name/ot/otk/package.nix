@@ -50,12 +50,16 @@ base.overrideAttrs (
       "dev"
     ];
     buildInputs = old.buildInputs ++ [
-      graphene
       harfbuzz
       libjpeg
       libpng
       libtiff
     ];
+
+    # Otk-3.0's introspection data includes Osk-3.0, which includes Graphene-1.0, and
+    # osk-3.0.pc requires graphene-gobject-1.0; so every OTK user needs graphene, and
+    # wrapGAppsHook puts its typelib on GI_TYPELIB_PATH for Python OTK apps.
+    propagatedBuildInputs = old.propagatedBuildInputs ++ [ graphene ];
 
     mesonFlags =
       (lib.filter (f: !(lib.hasPrefix "-Dgtk_doc=" f)) old.mesonFlags)
