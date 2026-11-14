@@ -1,0 +1,10 @@
+# AI agent CLIs that tulsipkgs fast-tracks (.github/workflows/tulsi-agents.yml):
+# a new vendor release becomes a pull request within hours instead of waiting for
+# nixpkgs. Free licenses only: these are built by tulsi-build and served from
+# cache.skarptech.org. One attribute per line.
+codex
+gemini-cli
+opencode
+aider-chat
+goose-cli
+qwen-code

@@ -44,6 +44,12 @@ in
     # forks and what is built against it
     inherit (pkgs) xorg-server xinit;
   }
+  # Fast-tracked AI agent CLIs (ci/tulsi/agents.txt, tulsi-agents.yml). While a version
+  # is ahead of nixpkgs it is built here; otherwise it is substituted from
+  # cache.nixos.org, and Attic does not store it again.
+  // lib.genAttrs (lib.filter (l: l != "" && !lib.hasPrefix "#" l) (
+    lib.splitString "\n" (builtins.readFile ../../ci/tulsi/agents.txt)
+  )) (n: pkgs.${n})
   // lib.filterAttrs (
     # drivers nixpkgs does not build on this platform or that are unfree
     _: drv: (builtins.tryEval drv.drvPath).success

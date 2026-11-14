@@ -1,0 +1,141 @@
+# TulsiOS: fast-track AI agent CLIs (ci/tulsi/agents.txt).
+#
+# Every 6 hours, each agent's own nixpkgs update script asks the vendor's release
+# channel for a newer version. A newer version that builds and passes the smoke test
+# (ci/tulsi/agent-update.sh) becomes one pull request per agent (branch
+# tulsi-agents/<attr>, refreshed in place when an even newer release appears).
+# A human merges it; tulsi-build then builds it and pushes it to cache.skarptech.org.
+# If the new release does not build or fails the smoke test, an issue is opened
+# instead (one per agent, commented on by later runs): that is the human/agent step.
+# When nixpkgs catches up, tulsi-sync takes upstream's version of these files.
+#
+# Needs: Settings → Actions → General → "Allow GitHub Actions to create and approve
+# pull requests".
+name: tulsi-agents
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: tulsi-agents
+  cancel-in-progress: false
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      agents: ${{ steps.list.outputs.agents }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tulsi-unstable
+          sparse-checkout: ci/tulsi
+      - id: list
+        run: |
+          agents=$(grep -vE '^\s*(#|$)' ci/tulsi/agents.txt | jq -R . | jq -sc .)
+          echo "agents=$agents" >> "$GITHUB_OUTPUT"
+
+  update:
+    needs: list
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        agent: ${{ fromJSON(needs.list.outputs.agents) }}
+    env:
+      ATTR: ${{ matrix.agent }}
+      BRANCH: tulsi-agents/${{ matrix.agent }}
+      GH_TOKEN: ${{ github.token }}
+      # nix-update reads release lists from the GitHub API.
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+
+      - uses: actions/checkout@v4
+        with:
+          ref: tulsi-unstable
+          fetch-depth: 1
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            max-jobs = auto
+            extra-substituters = ${{ vars.TULSI_CACHE_PUBLIC_KEY && 'https://cache.skarptech.org/tulsi' || '' }}
+            extra-trusted-public-keys = ${{ vars.TULSI_CACHE_PUBLIC_KEY }}
+
+      - name: Update, build and smoke-test
+        id: update
+        run: |
+          ci/tulsi/agent-update.sh "$ATTR" 2>&1 | tee update.log
+          read -r status old new < <(tail -1 update.log)
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+          echo "new=${new:-$old}" >> "$GITHUB_OUTPUT"
+
+      - name: Open or refresh the pull request
+        if: steps.update.outputs.status == 'updated'
+        env:
+          OLD: ${{ steps.update.outputs.old }}
+          NEW: ${{ steps.update.outputs.new }}
+        run: |
+          title="tulsi-agents: $ATTR $OLD -> $NEW"
+          open=$(gh pr list --head "$BRANCH" --state open --json number,title --jq '.[0]')
+          if [ -n "$open" ] && [ "$(jq -r .title <<<"$open")" = "$title" ]; then
+            echo "A pull request for $ATTR $NEW is already open."; exit 0
+          fi
+          changelog=$(nix-instantiate --eval --raw -A "$ATTR.meta.changelog" . 2>/dev/null || true)
+          homepage=$(nix-instantiate --eval --raw -A "$ATTR.meta.homepage" . 2>/dev/null || true)
+          git config user.name "tulsi-agents"
+          git config user.email "tulsi-agents@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git commit -qam "$title"
+          git push --force origin "$BRANCH"
+          {
+            echo "A new release of **$ATTR**: \`$OLD\` → \`$NEW\`, found by its nixpkgs update script."
+            echo
+            echo "- Built on this runner and smoke-tested: \`--version\` prints $NEW, \`--help\` works."
+            [ -n "$changelog" ] && echo "- Changelog: $changelog"
+            [ -n "$homepage" ] && echo "- Homepage: $homepage"
+            echo
+            echo "Merging publishes it: tulsi-build builds it and pushes it to cache.skarptech.org."
+            echo "Before merging, check the changelog for licence changes or anything unexpected."
+            echo
+            echo "<details><summary>Files changed</summary>"
+            echo; git diff --stat HEAD~1 | sed 's/^/    /'; echo
+            echo "</details>"
+          } > body.md
+          if [ -n "$open" ]; then
+            gh pr edit "$(jq -r .number <<<"$open")" --title "$title" --body-file body.md
+          else
+            gh pr create --base tulsi-unstable --head "$BRANCH" --title "$title" --body-file body.md
+          fi
+
+      - name: Report a broken update
+        if: failure() && steps.update.outcome == 'failure'
+        run: |
+          title="tulsi-agents: $ATTR update does not build"
+          found=$(git diff --unified=0 -- pkgs | grep -E '^\+\s*version = ' | head -1 | cut -d'"' -f2)
+          {
+            echo "The newest release of **$ATTR**${found:+ (\`$found\`)} failed to update, build or pass the smoke test."
+            echo
+            echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo
+            echo '```'; tail -40 update.log; echo '```'
+            echo
+            echo "Fix the package recipe (or wait for nixpkgs to do so); the next run retries."
+          } > body.md
+          issue=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number')
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body-file body.md
+          else
+            gh issue create --title "$title" --body-file body.md
+          fi

@@ -54,9 +54,28 @@ jobs:
             fi
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            git diff --name-only --diff-filter=U > conflicts.txt
-            git merge --abort
-            echo "conflict=true" >> "$GITHUB_OUTPUT"
+            git diff --name-only --diff-filter=U | sort > conflicts.txt
+            # Fast-tracked agents (tulsi-agents.yml): when nixpkgs has bumped an agent
+            # that tulsipkgs updated ahead of it, take upstream's files. If upstream is
+            # still older, the next tulsi-agents run proposes the newer version again.
+            git log --format= --name-only --grep '^tulsi-agents:' "$(git merge-base HEAD "$UP")"..HEAD \
+              | sed '/^$/d' | sort -u > agent-files.txt
+            if [ -s conflicts.txt ] && [ -z "$(comm -23 conflicts.txt agent-files.txt)" ]; then
+              echo "Taking upstream's version of fast-tracked agent files:"; cat conflicts.txt
+              xargs git checkout --theirs -- < conflicts.txt
+              xargs git add -- < conflicts.txt
+              git commit --no-edit
+              git diff --name-only "$UP" HEAD | sort > after.txt
+              if [ -n "$(comm -13 ours.txt after.txt)" ]; then
+                echo "::error::The merge differs from upstream in files TulsiOS does not change:"
+                comm -13 ours.txt after.txt
+                exit 1
+              fi
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+            else
+              git merge --abort
+              echo "conflict=true" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       - name: Report conflicts

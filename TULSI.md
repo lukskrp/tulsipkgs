@@ -47,10 +47,27 @@ have to be built.
 | `pkgs/top-level/tulsi-overrides.nix`, 2 lines in `pkgs/top-level/stage.nix` | Packages replaced in place: `xorg-server` = XLibre (Xorg 21.1 stays as `xorg-server-xorg`, used by `tigervnc` and `xvfb`), every `xf86-*` driver = its XLibre fork |
 | `pkgs/by-name/ot/otk/` | [OTK](https://github.com/lukskrp/OTK), the ABI-breaking GTK 3 fork (side by side with `gtk3`), with OSK (`libosk-3`, GTK 4's rendering engine) |
 | `pkgs/top-level/tulsi-release.nix` | What CI builds (`built`) and what must stay upstream (`curated`) |
-| `.github/workflows/tulsi-*.yml`, `ci/tulsi/` | Build + cache, daily upstream sync |
+| `.github/workflows/tulsi-*.yml`, `ci/tulsi/` | Build + cache, daily upstream sync, AI agent fast track |
+| Agent packages listed in `ci/tulsi/agents.txt` (only while a `tulsi-agents:` update is ahead of nixpkgs) | Newer vendor releases of free AI agent CLIs, by their own nixpkgs update scripts; tulsi-sync takes upstream's files once nixpkgs bumps them |
 | `TULSI.md` | This file |
 
 Keep this table up to date: it is the list of files a sync conflict can touch.
+
+## AI agent fast track
+
+`tulsi-agents.yml` runs every 6 hours. For each attribute in `ci/tulsi/agents.txt` (free
+licences only) it:
+1. runs the package's own update script (`ci/tulsi/agent-update.sh`);
+2. builds the new version and checks that `--version` and `--help` work;
+3. opens or refreshes one pull request per agent (branch `tulsi-agents/<attr>`).
+
+Merging is the human step: read the changelog first. tulsi-build then caches the new
+version on cache.skarptech.org.
+
+When nixpkgs later bumps the same package, tulsi-sync resolves the conflict by taking
+upstream's files. A human is needed only when an update script or build breaks, or a
+licence changes. To add an agent, add its attribute to `agents.txt`. It must have
+`passthru.updateScript` and a free licence.
 
 ## Common tasks
 
