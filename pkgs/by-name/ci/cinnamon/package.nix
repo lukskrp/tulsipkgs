@@ -78,13 +78,13 @@ in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
   # TulsiOS: Ocimum Desktop, a hard fork of Cinnamon 6.8 (branch "ocimum", see its OCIMUM.md).
-  version = "6.8.0-ocimum.2";
+  version = "6.8.0-ocimum.3";
 
   src = fetchFromGitHub {
     owner = "lukskrp";
     repo = "ocimum-desktop";
-    rev = "5a15b7bb85a628222e5a92697fb6b324e8e7dbcf";
-    hash = "sha256-MgEwmaOXz86SCLD7Ki32w3ImNjV3A+LYzyV1H8OPIQc=";
+    rev = "50a6ede12d1bc20e54b7e83c5ed809f53ab43722";
+    hash = "sha256-gFBJbt+JBqeNRB4HWnS4SDPKnZ3r7Xg7DuxoA3H7Zv0=";
   };
 
   patches = [
@@ -187,6 +187,10 @@ stdenv.mkDerivation (finalAttrs: {
 
     substituteInPlace ./files/usr/bin/cinnamon-session-cinnamon \
       --replace-fail "exec cinnamon-session" "exec ${cinnamon-session}/bin/cinnamon-session"
+
+    # The Ocimum wallpaper list names its pictures by their install path.
+    substituteInPlace ./files/usr/share/cinnamon-background-properties/ocimum.xml \
+      --replace-fail /usr/share/backgrounds $out/share/backgrounds
 
     patchShebangs src/data-to-c.pl
   '';
