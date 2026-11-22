@@ -78,13 +78,13 @@ in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
   # TulsiOS: Ocimum Desktop, a hard fork of Cinnamon 6.8 (branch "ocimum", see its OCIMUM.md).
-  version = "6.8.0-ocimum.3";
+  version = "6.8.0-ocimum.4";
 
   src = fetchFromGitHub {
     owner = "lukskrp";
     repo = "ocimum-desktop";
-    rev = "50a6ede12d1bc20e54b7e83c5ed809f53ab43722";
-    hash = "sha256-gFBJbt+JBqeNRB4HWnS4SDPKnZ3r7Xg7DuxoA3H7Zv0=";
+    rev = "b808383852c5700f3d758a137bc05e08a2459d70";
+    hash = "sha256-ALON0xtTPLEQQKM0d6ErWzThQ+6gDSmsZAK77zunr3Q=";
   };
 
   patches = [
