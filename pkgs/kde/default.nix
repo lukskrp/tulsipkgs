@@ -107,6 +107,7 @@ let
     );
 in
 makeScopeWithSplicing' {
-  otherSplices = generateSplicesForMkScope "kdePackages";
+  # By its own name: a SonicDE system overlays kdePackages (pkgs/sonic).
+  otherSplices = generateSplicesForMkScope "kdePackagesKDE";
   f = allPackages;
 }

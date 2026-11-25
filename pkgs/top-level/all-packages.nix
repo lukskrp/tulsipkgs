@@ -354,7 +354,14 @@ with pkgs;
 
   lshw-gui = lshw.override { withGUI = true; };
 
-  kdePackages = callPackage ../kde { };
+  kdePackages = lib.recurseIntoAttrs kdePackagesKDE;
+  # KDE's own set. A SonicDE system replaces kdePackages with sonicPackages
+  # (TulsiOS' sonic.desktop), so KDE apps are built on Sonic's frameworks;
+  # sonicPackages is built from this one, which such an overlay does not touch.
+  # Neither is listed on its own (package search, CI): they are kdePackages.
+  kdePackagesKDE = lib.dontRecurseIntoAttrs (callPackage ../kde { });
+  # SonicDE: the KDE Plasma 6 fork that keeps X11 (TulsiOS, pkgs/sonic).
+  sonicPackages = lib.dontRecurseIntoAttrs (callPackage ../sonic { kdePackages = kdePackagesKDE; });
 
   buildcatrust = with python3.pkgs; toPythonApplication buildcatrust;
 

@@ -1,0 +1,953 @@
+{
+  "attica": {
+    "hash": "sha256-G2JDT1J56c09l8N9ZwVnl8YIm9ksuEMp42ZsIcnWzTs=",
+    "repo": "sonic-frameworks-open-collab",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-open-collab/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "aurorae": {
+    "hash": "sha256-0XIk38KW8fzLUYDm/NKvJbdjIBXNZc2otEu/MPxYyqw=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/aurorae-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "baloo": {
+    "hash": "sha256-1m9rMYJjxtRlSF9QB1/OC2nTg2l6owRgcGOjBFjiKcs=",
+    "repo": "sonic-frameworks-file-search",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-file-search/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "bluedevil": {
+    "hash": "sha256-JWp43xGm6t5Hy/44HVNFiVu3xRRkJHOCxnu6pDAa3Uw=",
+    "repo": "sonic-bluetooth-runtime",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-bluetooth-runtime/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "bluez-qt": {
+    "hash": "sha256-U/5Dl5nlIufq1BcsvcEOhdxrNRATwUTs84VrnW4FmYk=",
+    "repo": "sonic-frameworks-bluetooth",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-bluetooth/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "breeze": {
+    "hash": "sha256-8P/HwyCJd1ZY5wnzjZRwOaK1SogXu2tfZn9L35SuEnE=",
+    "repo": "sonic-breeze",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-breeze/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "breeze-gtk": {
+    "hash": "sha256-AehG/gf/ldzZFympyI/Gb7tXXS/1nmdvvNLp5MWFiQY=",
+    "repo": "sonic-silver-gtk",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-silver-gtk/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "breeze-icons": {
+    "hash": "sha256-PadXU0UYbd4LrxrXZkfcZoXBR0l6qbFrDukuQzhP/6o=",
+    "repo": "sonic-silver-icons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-silver-icons/archive/refs/tags/6.31.0.2.tar.gz",
+    "version": "6.31.0.2"
+  },
+  "dolphin": {
+    "hash": "sha256-j2Dme7rJLtUj7UO36einkcetWIVr3Ve+Fe0jkLEKsWE=",
+    "repo": "sonic-ecco",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-ecco/archive/refs/tags/26.08.3.tar.gz",
+    "version": "26.08.3"
+  },
+  "drkonqi": {
+    "hash": "sha256-wza5q/Pv7E4BT1XdEib9ALCypay8eBrvGafnASSFP2U=",
+    "repo": "sonic-dr-robotnik",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-dr-robotnik/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "extra-cmake-modules": {
+    "hash": "sha256-DcVC9YxQIUQsRjfN9R9D7ag/aoRILtb21wOHNxjFj9g=",
+    "repo": "sonic-frameworks-cmake-modules",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-cmake-modules/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "frameworkintegration": {
+    "hash": "sha256-HNZ34cmo7OmgxHsQ4KwTpNM/ayM5wBk59zffJ+qZL58=",
+    "repo": "sonic-frameworks-qt-integration",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-qt-integration/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kactivitymanagerd": {
+    "hash": "sha256-IauFfJIsQ9T6jb+WHeCai/7zBF6lJt0F4yHFsQ/PsLc=",
+    "repo": "sonic-activity-manager-daemon",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-activity-manager-daemon/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kapidox": {
+    "hash": "sha256-bPCY3TxayHFps7f2zXxXEk+hBFUlq8eALfljn6MArdY=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kapidox-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "karchive": {
+    "hash": "sha256-XnzbNVrQEDlmDNpXfrE85MdbvyejdMa5nfvwILoIuzI=",
+    "repo": "sonic-frameworks-archive",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-archive/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kauth": {
+    "hash": "sha256-6E0OAn8MnahyH+3YmUYBotp5nPvaBPlL5YUAthZpQhI=",
+    "repo": "sonic-frameworks-auth",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-auth/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kbookmarks": {
+    "hash": "sha256-Te7x7lpO4nB+2BMgBTFD31M7Moyh+wIxlyw0hHtqiwM=",
+    "repo": "sonic-frameworks-bookmarks",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-bookmarks/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kcalendarcore": {
+    "hash": "sha256-3QllDEBu9g3bPj/lXdT6yoGaUAF1GX+I+PInnrtP4W4=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kcalendarcore-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "kcmutils": {
+    "hash": "sha256-YMf8dbdEbzE994WXo+NI8AyjSusyv08PoqVnxjb3U10=",
+    "repo": "sonic-frameworks-settings-utils",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-settings-utils/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kcodecs": {
+    "hash": "sha256-SvJU6lM4+HJo6xD5ow3pZJHJGfgI3jdtDQMBtTFT8Hc=",
+    "repo": "sonic-frameworks-text-codec",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-text-codec/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kcolorscheme": {
+    "hash": "sha256-ES8il/NPQvjVilgKbHyhb4eg1J3aQU2ymVq42RT6d1k=",
+    "repo": "sonic-frameworks-color-scheme",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-color-scheme/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kcompletion": {
+    "hash": "sha256-dd7isD90gZLndqkqROlb39KiFyivBvA0Kq5U03y6InQ=",
+    "repo": "sonic-frameworks-autocomplete",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-autocomplete/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kconfig": {
+    "hash": "sha256-c+7z6lqju0IzH5VA15rYDUGPXNZdkMYRlxDDvWEWHpU=",
+    "repo": "sonic-frameworks-settings",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-settings/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kconfigwidgets": {
+    "hash": "sha256-7FtLSbip2z1TNj92ZwvSgjJe3BBk8/6ToLTZD8gPI/Y=",
+    "repo": "sonic-frameworks-settings-ui",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-settings-ui/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kcontacts": {
+    "hash": "sha256-mHvHocsNZC7S7zCmOWIVNasY6CXkXVJuGPHKHimmZtQ=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kcontacts-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "kcoreaddons": {
+    "hash": "sha256-bJBCcO6pTArpG/lobC8oq4bCSknuEuxhdYzwrVZI9rc=",
+    "repo": "sonic-frameworks-core-addons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-core-addons/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kcrash": {
+    "hash": "sha256-RLgN/2WrtmeUrXsaCqW/70sX398g8ArV/EYdaU1UYdo=",
+    "repo": "sonic-frameworks-crash-handler",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-crash-handler/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kdav": {
+    "hash": "sha256-2o6S0yAcVWa5MYz1J4ik6eA0++VW6h56bKjufeA99NA=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kdav-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "kdbusaddons": {
+    "hash": "sha256-KMHsz+MaIBsx/l1dlb41R/6AeMFf199QkZWC3ZUPcjo=",
+    "repo": "sonic-frameworks-dbus",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-dbus/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kde-cli-tools": {
+    "hash": "sha256-JUxB/eQyX2ZAHIWDAptNoTCSW4itLAsAMkyDF1VbcEc=",
+    "repo": "sonic-terminal-tools",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-terminal-tools/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kde-gtk-config": {
+    "hash": "sha256-brKbbhev0peTokFuZ53ok2YM0yg+ODaVivW1DBU5uzw=",
+    "repo": "sonic-gtk-theme-bridge",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-gtk-theme-bridge/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kdeclarative": {
+    "hash": "sha256-BgD5hjxOe8MJC6okK3ZI/wAw9oSsTaVSt7BxXOtnqbs=",
+    "repo": "sonic-frameworks-qml-bridge",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-qml-bridge/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kdecoration": {
+    "hash": "sha256-A3U26UE9ykl9BK8QN07xXB/xpI/6dK0uJ3n9kEk1M+E=",
+    "repo": "sonic-decoration",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-decoration/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kded": {
+    "hash": "sha256-OqfBWH4mZkNWPMVLvlUQuiqrDbBgAsonfuVx+FPo/DU=",
+    "repo": "sonic-daemon",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-daemon/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kdeplasma-addons": {
+    "hash": "sha256-djwoqJzClork9Q5Y3RF3Yd7BrMiBMTBEDje0aeMee6E=",
+    "repo": "sonic-workspace-addons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-workspace-addons/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kdesu": {
+    "hash": "sha256-HeVBH3J17sqH6VQWug54ZiLq1qGluwaQLxJs5UmMLo8=",
+    "repo": "sonic-frameworks-root-shell",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-root-shell/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kdnssd": {
+    "hash": "sha256-mU5Vz9SvVhtQlzPuXgz1+sE857fLYuo5g4ydoUaFn4o=",
+    "repo": "sonic-frameworks-zeroconf",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-zeroconf/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kdoctools": {
+    "hash": "sha256-Eldj6tEar9BmzPdvrgd+NoRnUoJtdrQY3CN/GUId1cM=",
+    "repo": "sonic-frameworks-doctools",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-doctools/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kfilemetadata": {
+    "hash": "sha256-aQh76XR1IfzosyJk+4rEUh8YipJUPr6r5fvIBbfOtIU=",
+    "repo": "sonic-frameworks-file-metadata",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-file-metadata/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kgamma": {
+    "hash": "sha256-H3GQevIzgxGKUtY9ekjz2Yb3dkypXIJdovl2oftAyvM=",
+    "repo": "sonic-gamma",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-gamma/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kglobalaccel": {
+    "hash": "sha256-4pUmrE/RWKsZDfUHt2uUJXBRME1Oo71MRZXioyVdNA8=",
+    "repo": "sonic-frameworks-keybind",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-keybind/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kglobalacceld": {
+    "hash": "sha256-jcyUkj17qT5mmaj/N4T46LmOMZJq9MJaG50OvUvoSog=",
+    "repo": "sonic-keybind-daemon",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-keybind-daemon/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kguiaddons": {
+    "hash": "sha256-RB1JYrGBxpMWEYqGSMT0AlWGbyUW+8aRQB2EzgyvrXA=",
+    "repo": "sonic-frameworks-gui-addons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-gui-addons/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kholidays": {
+    "hash": "sha256-r80Z+sLqSy2BlSWZdmQRe3PzMSe4pPbsRVtOoLkcjGQ=",
+    "repo": "sonic-frameworks-holidays",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-holidays/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "ki18n": {
+    "hash": "sha256-JBcVxypdnYFYUKs3ns9+xDxJfrhEc2Tv0MJ1AePrOic=",
+    "repo": "sonic-frameworks-internationalization",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-internationalization/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kiconthemes": {
+    "hash": "sha256-Ac93USzowwXqOIlmjhdSqtov+wNY4F/vOCr4rftRJVI=",
+    "repo": "sonic-frameworks-icon-themes",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-icon-themes/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kidletime": {
+    "hash": "sha256-0G0BUiiJXx0uyetqdGjORaFf7ofUZMjj1fVop56B1KE=",
+    "repo": "sonic-frameworks-idle-tracker",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-idle-tracker/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kimageformats": {
+    "hash": "sha256-wVSd8pZU7CbwsrrSHHyvIqsuK4LS3ZYilj61e9TpGTI=",
+    "repo": "sonic-frameworks-image-formats",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-image-formats/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kinfocenter": {
+    "hash": "sha256-DZb18EcJ+Gb7BHUIRInGujCIR3em2Xnz43emsiUl5ig=",
+    "repo": "sonic-system-info",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-system-info/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kio": {
+    "hash": "sha256-uj7ZVL4GdIEy9WO3z3XBaVTmfLCBbOp38iCGoo3GRYc=",
+    "repo": "sonic-frameworks-io",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-io/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kirigami": {
+    "hash": "sha256-/AfZkwHloDuEEB9nmPqNHM1qTubTpkHpdCNj6Lz18Ds=",
+    "repo": "sonic-frameworks-quick-ui",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-quick-ui/archive/refs/tags/6.31.0.2.tar.gz",
+    "version": "6.31.0.2"
+  },
+  "kitemmodels": {
+    "hash": "sha256-pCk/JDafxcHdggqaR+U5qig0VOh5hIX/Mg9M5UCD9yU=",
+    "repo": "sonic-frameworks-data-models",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-data-models/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kitemviews": {
+    "hash": "sha256-0IHzKRIoQrqycr1ciaEGX9+visRUsc4K+DYbpGriaEw=",
+    "repo": "sonic-frameworks-data-views",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-data-views/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kjobwidgets": {
+    "hash": "sha256-urTNDsxlATOa+53h2wvHgXExkput4eowWHHuC499dLI=",
+    "repo": "sonic-frameworks-progress-ui",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-progress-ui/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kmenuedit": {
+    "hash": "sha256-jmBbsXjF8cXUBlEfNy2AmzEnOuz/h8WjR1ArhZYz3zo=",
+    "repo": "sonic-launcher-menu-edit",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-launcher-menu-edit/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kmime": {
+    "hash": "sha256-hZpcIz7wpwr3b+Z42jsdUZCG3pzUEIJjQr3ywC6tz5A=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kmime-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "knewstuff": {
+    "hash": "sha256-Ql9bsfRPdj4ZUJsCTh0ty2wEdWRRVObuFm98MHxYjWU=",
+    "repo": "sonic-frameworks-addons-downloader",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-addons-downloader/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "knighttime": {
+    "hash": "sha256-NLTbMkQKKsIQN1BSAX0o6Tz1vUYXddTyURuzUe9t2gU=",
+    "repo": "sonic-night-light",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-night-light/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "knotifications": {
+    "hash": "sha256-AZyXxHs0NDA7avrawThPYqmkkGNG67Fk5+Fz51MTw1Q=",
+    "repo": "sonic-frameworks-notifications",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-notifications/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "knotifyconfig": {
+    "hash": "sha256-mRtOMWJGnsYFKkPn7rrmM2Fzsmpn477WR7SQVoZurp4=",
+    "repo": "sonic-frameworks-notification-settings",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-notification-settings/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "konsole": {
+    "hash": "sha256-8g5iGvfgPunmW4xWgWy+vijUOkHrlmgp7X6dJTTYraU=",
+    "repo": "sonic-terminal",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-terminal/archive/refs/tags/26.08.3.1.tar.gz",
+    "version": "26.08.3.1"
+  },
+  "kpackage": {
+    "hash": "sha256-wsiofRa58B0V57wwVYS3YVsDn/bby5I1ulh2QBS01rY=",
+    "repo": "sonic-frameworks-package",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-package/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kparts": {
+    "hash": "sha256-rCpucz1CUN++hlS9cIoo6D87wXGVwfp9GI3Jir5nmQM=",
+    "repo": "sonic-frameworks-ui-components",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-ui-components/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kpeople": {
+    "hash": "sha256-ft9YMJySNod69v0MXjNQVKhWTfzkQHQzpsKUwaxACHc=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kpeople-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "kpipewire": {
+    "hash": "sha256-66t6c3yB0lDe6I1w9yF37nj1mclKjiLQaeVXhtF+Wmo=",
+    "repo": "sonic-pipewire",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-pipewire/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kplotting": {
+    "hash": "sha256-dOInULCPv+yKlvXK1zgs2GgARaJIwBfILdtc52uF6LY=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/kplotting-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "kpty": {
+    "hash": "sha256-5F86AgHe9G1M0iuuSDmtXd4ihjS9YPeC6H6UzehdZ5E=",
+    "repo": "sonic-frameworks-pseudo-terminal",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-pseudo-terminal/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kquickcharts": {
+    "hash": "sha256-x5w+MOBtem2CnGLKrgUIzIQ9FMIVjSbVZJvZKtx4u94=",
+    "repo": "sonic-frameworks-quick-charts",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-quick-charts/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "krdp": {
+    "hash": "sha256-1OZRrKefg9bacd4bNuh9OLEj+o/PBmwilKVaQ7NnXeQ=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/krdp-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "krunner": {
+    "hash": "sha256-KNJY0G2Y3zX5Nu+Jea1Qm54tHE+Ko27YPCidBL0wOYY=",
+    "repo": "sonic-frameworks-runner",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-runner/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kscreen": {
+    "hash": "sha256-q4QKBBo5IciMzNQGb1kAI5yfprU4oc7JpZJpBxiypYs=",
+    "repo": "sonic-screen",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-screen/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kscreenlocker": {
+    "hash": "sha256-oupdW87UFUh+xnLWT/H/7mi0c13SjuMu4Y/hE6EBkmc=",
+    "repo": "sonic-screenlocker",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-screenlocker/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kservice": {
+    "hash": "sha256-1C08kBxB0IpeeZtA7P8tt4J6edn9I/4+V7btHNkfAxI=",
+    "repo": "sonic-frameworks-app-info",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-app-info/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "ksshaskpass": {
+    "hash": "sha256-eQVtEYxftRHMudbPPIXL1GV9ezs1RRndmcL6plBbBqQ=",
+    "repo": "sonic-ssh-password-prompt",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-ssh-password-prompt/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kstatusnotifieritem": {
+    "hash": "sha256-c6hE9U81XtYGFJVK/sw0Dza+pd34PRcpVsLPX3WMdVk=",
+    "repo": "sonic-frameworks-status-notification",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-status-notification/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "ksvg": {
+    "hash": "sha256-ZY578rKHRXScH9VVw1C421c77UZP0IXDnKHPDsG+wZU=",
+    "repo": "sonic-frameworks-svg",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-svg/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "ksystemstats": {
+    "hash": "sha256-2wOeL0BPYd6SvO0bGePUELhfWNSTv8uOrXO9hX4t5Qo=",
+    "repo": "sonic-system-stats",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-system-stats/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "ktexteditor": {
+    "hash": "sha256-2nJ6EKWI/axQ6WWhrLQSea3oSeAfRuHtrfIdOw5f0J8=",
+    "repo": "sonic-frameworks-text-editor",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-text-editor/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "ktexttemplate": {
+    "hash": "sha256-RhwNFnJDD2RtmNiewiaRL3rOAx/aAgogm5zicP0UbAw=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/ktexttemplate-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "ktextwidgets": {
+    "hash": "sha256-3/p2IkpOpTCGGG6WyAnIuOaOHelma40TzqSGcow9N9w=",
+    "repo": "sonic-frameworks-text-widgets",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-text-widgets/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kunitconversion": {
+    "hash": "sha256-/qZS8ILT5efJ7Lj9uX2H6rdDZ4hrCulhERMlDw6fltU=",
+    "repo": "sonic-frameworks-unit-conversion",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-unit-conversion/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kuserfeedback": {
+    "hash": "sha256-Dn8+CrkwSSA3sCsva2wzq5q13LRgWLp7vH2IbBqTWac=",
+    "repo": "sonic-frameworks-user-feedback",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-user-feedback/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kwallet": {
+    "hash": "sha256-JOksxtqSZyBGzVSpvtIXLbc7bkHO8IvJdf0qSsOsG2A=",
+    "repo": "sonic-frameworks-keyring",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-keyring/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kwallet-pam": {
+    "hash": "sha256-ZLdkv1yDMzegJKnHadDxildKbxI6azMag4gtEEtXxRo=",
+    "repo": "sonic-frameworks-keyring-pam",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-keyring-pam/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kwayland": {
+    "hash": "sha256-mO5s6eA7mHKoUDrrxgMIsf656THlPe5glIkEBypN+NM=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/kwayland-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "kwidgetsaddons": {
+    "hash": "sha256-WCkExo7YwsikmRVZa2ybF5VaWcEis73Dg5uueglyqNY=",
+    "repo": "sonic-frameworks-widgets-addons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-widgets-addons/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "kwin": {
+    "hash": "sha256-zslT9CgpHXJ1eT7Q0n+B/sN0kSsaty3DVie9LKB3ddU=",
+    "repo": "sonic-win",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-win/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kwindowsystem": {
+    "hash": "sha256-q8HQPq2OAqnE319s4IkkfY9rI8+reQx5sKABAcO3UCs=",
+    "repo": "sonic-frameworks-windowsystem",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-windowsystem/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "kwrited": {
+    "hash": "sha256-S0J32p7x3m4xiH4rwllHXrN7uZihPCYkCcIOF36zIxc=",
+    "repo": "sonic-write-daemon",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-write-daemon/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "kxmlgui": {
+    "hash": "sha256-i0xMF/paUTzO7Lj0J8qaQ/OVyK2nSakKbuO/XtvYT7E=",
+    "repo": "sonic-frameworks-xml-gui",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-xml-gui/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "layer-shell-qt": {
+    "hash": "sha256-iGZQSDTkcn4wyjZ0IHeB3Jo6xQyPBCu7yNjP3y7OMqE=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/layer-shell-qt-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "libkscreen": {
+    "hash": "sha256-exFtkAV06Upeyh05XwRM2CBF1glW2xSfUhXhzpziLy0=",
+    "repo": "sonic-screen-library",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-screen-library/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "libksysguard": {
+    "hash": "sha256-dMf4BWC6xwZGFdGONLZ202d9xr+j+WyOjPXE62iCywI=",
+    "repo": "sonic-system-monitor-library",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-system-monitor-library/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "libplasma": {
+    "hash": "sha256-vwIoweJblA10sxaUHCCOInbcBPa1dnh3DDFD1uTBdZg=",
+    "repo": "sonic-interface-libraries",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-interface-libraries/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "milou": {
+    "hash": "sha256-1IFH18iberQtUqsob3YAKG5nCP4iUbwN2OuOmdo2A2Y=",
+    "repo": "sonic-file-search-ui",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-file-search-ui/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "modemmanager-qt": {
+    "hash": "sha256-AgA+wGBdC22WQt9MHYKIdOTlYg7UcekBLQ5Di4inYqY=",
+    "repo": "sonic-frameworks-modemmanager",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-modemmanager/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "networkmanager-qt": {
+    "hash": "sha256-F46rr0PFXo/UBbfqtZTKUY82SjVFMMxflcLXhMNnFLY=",
+    "repo": "sonic-frameworks-networkmanager",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-networkmanager/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "ocean-sound-theme": {
+    "hash": "sha256-b432j7KIwma0XEd6pKYfNzr7s7kX3NDaw8nGS8xnsxM=",
+    "repo": "sonic-silver-sound-theme",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-silver-sound-theme/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "oxygen": {
+    "hash": "sha256-piPzv/0RXWa05xFAbILYqLqH4zF+2RsYUryplasoIy8=",
+    "repo": "sonic-oxygen",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-oxygen/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "oxygen-icons": {
+    "hash": "sha256-Bz5hq2PbeyXmDTzbt/3xKDku5xQINrvPc7uFe0DYTvI=",
+    "repo": "sonic-oxygen-icons",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-oxygen-icons/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "oxygen-sounds": {
+    "hash": "sha256-BRwhDUgDcQ43KWNhaTLPZcARMDnjWIAi4Xq2SAO+8ck=",
+    "repo": "sonic-oxygen-sounds",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-oxygen-sounds/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-activities": {
+    "hash": "sha256-jimaYm7DJwgjL4j8LJsw0c/SF8TpzV6/BQ4iNxExbjU=",
+    "repo": "sonic-activities",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-activities/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-activities-stats": {
+    "hash": "sha256-qF1dlpf2UzbWvM9jLJuB4n/baqgghyP3OnGkPJq65rw=",
+    "repo": "sonic-activities-stats",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-activities-stats/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-browser-integration": {
+    "hash": "sha256-WO4iLxcCmdJJ0RuG7nZMfWSRwsjLFubHDbpK0AbPWEM=",
+    "repo": "sonic-browser-integration",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-browser-integration/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-desktop": {
+    "hash": "sha256-D/CVebVrUjg7ssc8x0g+WrxwQ3gTLSxwI3g3jBYPVg0=",
+    "repo": "sonic-desktop-interface",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-desktop-interface/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-disks": {
+    "hash": "sha256-GW+MZoSSHxBIDlauP1edC0AMt3uvgBZEnNkLIRUep7M=",
+    "repo": "sonic-disks",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-disks/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-firewall": {
+    "hash": "sha256-JTMTiALmNSnTOv+wthQhhtPOW65cpAfd/fHOTMClVNA=",
+    "repo": "sonic-firewall",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-firewall/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-integration": {
+    "hash": "sha256-VWgtOHCB/SeJU0UMoT1A1Jntd9xNTt4zTSnVtMNo6T0=",
+    "repo": "sonic-qt-theme-bridge",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-qt-theme-bridge/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-keyboard": {
+    "hash": "sha256-xvnDB6F8YOoWkNhRjrT9QW2vPsQbiXPT4mS6xEaN/Io=",
+    "repo": "sonic-keyboard",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-keyboard/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-nm": {
+    "hash": "sha256-7CYcQowomhwU9QkxmV2AQhmNfr5fIBHTit+Kw6zs8bU=",
+    "repo": "sonic-network-manager",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-network-manager/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-pa": {
+    "hash": "sha256-Sbl2o0OOGrqxDHF6edkCPcHBlzhBrLsv62K49s325mk=",
+    "repo": "sonic-audio-applet-pulse",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-audio-applet-pulse/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-sdk": {
+    "hash": "sha256-rJPXWQd2l83+kZJxxTrYk79BAyLk7nsrcpDBrqEfA0w=",
+    "repo": "sonic-theme-sdk",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-theme-sdk/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-systemmonitor": {
+    "hash": "sha256-U7vPzs8fHOPfZ1amGM0xx6v+a47XoFwjD992M0ZzweU=",
+    "repo": "sonic-system-monitor",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-system-monitor/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-thunderbolt": {
+    "hash": "sha256-QoSKdiz7VDz/yNTbbeEYGLBJYjJ21LuecfL8/zTqhhs=",
+    "repo": "sonic-thunderbolt",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-thunderbolt/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-vault": {
+    "hash": "sha256-rPIrPEvRrkI0gVHbh3FuCWve9dEzUUcP7u2JmZGEuvo=",
+    "repo": "sonic-vault",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-vault/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-welcome": {
+    "hash": "sha256-OCym/QOtSVARGsrWKiTskDpqO1i70P5WEBr0UBGhHEk=",
+    "repo": "sonic-welcome-center",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-welcome-center/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-workspace": {
+    "hash": "sha256-S0iC0s065ZinhJuCFN/w9YDkqAAJF6kfqf4XmJlZx/E=",
+    "repo": "sonic-workspace",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-workspace/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma-workspace-wallpapers": {
+    "hash": "sha256-aVgrGWJk7TjaLkxNB5B1Dru5Xj+axuXcZIn8dtf+Pmc=",
+    "repo": "sonic-workspace-wallpapers",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-workspace-wallpapers/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "plasma5support": {
+    "hash": "sha256-bZhgPW7AgmvR+3NIoV5z2QEf0gNfA72l+OVSENYrJO0=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/plasma5support-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "polkit-kde-agent-1": {
+    "hash": "sha256-DWWGqpI8mls9rgTBz8wUvM83OU+dsFmPZQzOpJH52UU=",
+    "repo": "sonic-polkit-agent",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-polkit-agent/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "powerdevil": {
+    "hash": "sha256-x7ijypPXYCArSXMRMD+jBdZecAhnrAAaU5D6xE3lBO8=",
+    "repo": "sonic-power-management",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-power-management/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "print-manager": {
+    "hash": "sha256-B6mFllgzV+ruth5blAW6ZNKe6cnIVOsJGdnZnYpTWw8=",
+    "repo": "sonic-print-management",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-print-management/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "prison": {
+    "hash": "sha256-CpWigQCCufEvYazWDLMV2+aqycHTtfSggyZp/kiy5Us=",
+    "repo": "sonic-frameworks-barcode",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-barcode/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "purpose": {
+    "hash": "sha256-ZGqWF+pVcRSm/5huapQzpTH2KJW9rc8/GfQZGotM/PQ=",
+    "repo": "sonic-frameworks-purpose",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-purpose/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "qqc2-breeze-style": {
+    "hash": "sha256-Hrr7kHNQ48Q/iULEFF4jnTxG9pFrb/1buwITjnaAVZs=",
+    "repo": "sonic-frameworks-quick-silver-style",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-quick-silver-style/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "qqc2-desktop-style": {
+    "hash": "sha256-9wCjHxkaFrdhhlcgt38awQ55mUCix2W1DJFwbD8aW3o=",
+    "repo": "sonic-frameworks-quick-desktop-style",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-quick-desktop-style/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "sddm-kcm": {
+    "hash": "sha256-3NLN8SEOEuqtePiIGdNqIeBVc5OfF2VVLE9XR30QAD4=",
+    "unpack": false,
+    "url": "mirror://kde/stable/plasma/6.8.2/sddm-kcm-6.8.2.tar.xz",
+    "version": "6.8.2"
+  },
+  "silver": {
+    "hash": "sha256-IQ/5ue0H3evrBs864tHW9THKXUTI7j79PUEzYZd8rx0=",
+    "repo": "sonic-silver",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-silver/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "solid": {
+    "hash": "sha256-qPHEE+Yx4nlrKJ1HAvD3mgTDxUMliBlqRz7OO4BpVMg=",
+    "repo": "sonic-frameworks-device-integration",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-device-integration/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "sonic-ipc": {
+    "hash": "sha256-OTkC2LbMpYO7y3jhV1X0Ehupo6rGUc811qYAC7abl0U=",
+    "repo": "sonic-frameworks-ipc",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-ipc/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "sonic-logging": {
+    "hash": "sha256-lUtOQEH+uU2StZP7RgLNmjpIZ7qEOdiSzrJQaqULiyM=",
+    "repo": "sonic-frameworks-logging",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-logging/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "sonnet": {
+    "hash": "sha256-2CplsyvS9ISxtudC6Dmbi5H576g6NGft8Df8G4xYsoI=",
+    "repo": "sonic-frameworks-spell-check",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-spell-check/archive/refs/tags/6.31.0.1.tar.gz",
+    "version": "6.31.0.1"
+  },
+  "spectacle": {
+    "hash": "sha256-rjsG27/mVqcA2W7UKCcgw/4d1tSHPU2dl6jPThK90VI=",
+    "repo": "sonic-screenies",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-screenies/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "syndication": {
+    "hash": "sha256-zfyCDn1gX0PTS5u6RSiZm9YG4BVATKnJwE7dQCGDlRI=",
+    "repo": "sonic-frameworks-feeds",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-feeds/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "syntax-highlighting": {
+    "hash": "sha256-glu+uEoqtw0HeRUV2GTaFZv9Cc7kqlzioDbO908JDTw=",
+    "repo": "sonic-frameworks-syntax-highlighting",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-frameworks-syntax-highlighting/archive/refs/tags/6.31.0.tar.gz",
+    "version": "6.31.0"
+  },
+  "systemsettings": {
+    "hash": "sha256-NnDeTcxM3SdNObs9Omd2Rk42CdpOjvY2s6863B7egQw=",
+    "repo": "sonic-system-settings",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/sonic-system-settings/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  },
+  "threadweaver": {
+    "hash": "sha256-SmWUTcyhJnKs5tVKSLOpk9S0a2CVEGMWw6leyuavmQY=",
+    "unpack": false,
+    "url": "mirror://kde/stable/frameworks/6.31/threadweaver-6.31.0.tar.xz",
+    "version": "6.31.0"
+  },
+  "xdg-desktop-portal-kde": {
+    "hash": "sha256-20aVRWFoPseQ7Acg497tLADXJoBZGJMh0pCeu+RWMI0=",
+    "repo": "xdg-desktop-portal-sonicde",
+    "unpack": true,
+    "url": "https://github.com/Sonic-DE/xdg-desktop-portal-sonicde/archive/refs/tags/6.8.2.tar.gz",
+    "version": "6.8.2"
+  }
+}
