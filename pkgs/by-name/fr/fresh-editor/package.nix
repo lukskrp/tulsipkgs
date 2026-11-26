@@ -14,16 +14,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "fresh";
-  version = "0.5.4";
+  version = "0.5.9";
 
   src = fetchFromGitHub {
     owner = "sinelaw";
     repo = "fresh";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-za4G56fIJac8bJ22NsWYnVEChmE/JXmHLG0w8O1jeXg=";
+    hash = "sha256-+30iF8mWxOVrm5bPHWzY9khuMf3bHOESyV5ferySoH0=";
   };
 
-  cargoHash = "sha256-J2FA74Ry2oRrd/GA5yA0a7k/DzIQoRkg9kMWQEE9ZTo=";
+  cargoHash = "sha256-lNCzwQpLzGTsU3qPouin1ZqUME8XgUHtTQPcCdU1TEs=";
 
   __structuredAttrs = true;
 
@@ -49,6 +49,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
   '';
 
   postInstall = ''
+    # The app-menu entry (a terminal app) and the manual page.
+    install -Dm644 crates/fresh-editor/resources/fresh.desktop -t $out/share/applications
+    install -Dm644 crates/fresh-editor/resources/fresh.1 -t $out/share/man/man1
+    install -Dm644 crates/fresh-editor/flatpak/io.github.sinelaw.fresh.svg       $out/share/icons/hicolor/scalable/apps/fresh.svg
+    # --no-upgrade-check also turns off the anonymous telemetry (main.rs).
     wrapProgram $out/bin/${finalAttrs.meta.mainProgram} \
       --add-flags "--no-upgrade-check" \
       --prefix PATH : ${lib.makeBinPath [ python3 ]}
@@ -65,6 +70,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
     "--skip=services::release_checker::tests::the_release_feed_override_is_shared_by_check_and_update"
     # flaky: https://github.com/NixOS/nixpkgs/pull/585026#issuecomment-6741147524
     "--skip=services::release_checker::tests::test_update_checker"
+    # The build sandbox has no /bin/sh, the plugin directory isn't writable there,
+    # and 0.5.9's changelog has a credit the test's parser rejects.
+    "--skip=services::remote::spawner::tests::ssh_launcher_carries_multiline_values_to_the_shell"
+    "--skip=services::plugins::embedded::tests::every_embedded_plugin_is_precompiled"
+    "--skip=release_notes::parse::tests::the_real_changelog_parses"
   ];
   cargoTestFlags = [
     "--lib"
