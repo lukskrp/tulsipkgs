@@ -209,6 +209,14 @@ stdenv.mkDerivation (finalAttrs: {
     # https://github.com/NixOS/nixpkgs/issues/129946
     patchPythonScript $out/share/cinnamon/cinnamon-desktop-editor/cinnamon-desktop-editor.py
 
+    # TulsiOS: System Settings' Applets, Desklets, Extensions and Themes pages import
+    # Spices.py, which imports `cinnamon.harvester` from $out's site-packages; without
+    # it on the path they crashed on open. The same for xlet-settings (a spice's
+    # Configure) and cinnamon-install-spice.
+    patchPythonScript $out/share/cinnamon/cinnamon-settings/cinnamon-settings.py
+    patchPythonScript $out/share/cinnamon/cinnamon-settings/xlet-settings.py
+    patchPythonScript $out/bin/cinnamon-install-spice
+
     # Called as `pkexec cinnamon-settings-users.py`.
     wrapGApp $out/share/cinnamon/cinnamon-settings-users/cinnamon-settings-users.py
   '';
