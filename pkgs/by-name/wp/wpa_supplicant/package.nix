@@ -70,6 +70,9 @@ stdenv.mkDerivation (finalAttrs: {
     CONFIG_MESH=y
     CONFIG_OWE=y
     CONFIG_P2P=y
+    # TulsiOS: Wi-Fi Display (Miracast) information elements on P2P, which GNOME
+    # Network Displays needs to find and connect to TVs (TulsiOS ADR 0045).
+    CONFIG_WIFI_DISPLAY=y
     CONFIG_SAE_PK=y
     CONFIG_TDLS=y
     CONFIG_TLS=openssl
