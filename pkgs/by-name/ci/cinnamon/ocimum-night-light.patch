@@ -1,0 +1,446 @@
+diff --git a/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/applet.js b/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/applet.js
+index 7ce1d6d..ffe24ef 100644
+--- a/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/applet.js
++++ b/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/applet.js
+@@ -1,51 +1,300 @@
++// Ocimum's Night Light applet (TulsiOS ADR 0043): night light on/off, warmth,
++// schedule, a one-hour pause, and brightness and gamma for each display.
++//
++// Everything is a setting of cinnamon-settings-daemon's colour plugin, which builds
++// each display's gamma ramp from them in one place (so nothing fights over the ramp,
++// as Redshift and the night light did). The ramp is applied on the way to the
++// monitor: screenshots and recordings keep their true colours.
++
+ const Applet = imports.ui.applet;
+-const Gio = imports.gi.Gio;
+ const PopupMenu = imports.ui.popupMenu;
+ const Util = imports.misc.util;
++const Gio = imports.gi.Gio;
++const GLib = imports.gi.GLib;
+ const St = imports.gi.St;
+ 
+-class NightLightSwitch extends Applet.IconApplet {
+-  constructor(metadata, orientation, panelHeight, instance_id) {
+-    super(orientation, panelHeight, instance_id);
+-
+-    this.gsettings = Gio.Settings.new("org.cinnamon.settings-daemon.plugins.color");
+-    this.nightLightEnabled = this.gsettings.get_boolean("night-light-enabled");
+-    this.connectColorID = this.gsettings.connect("changed", () => this.set_icon());
+-    this.set_icon();
+-
+-    let items = this._applet_context_menu._getMenuItems();
+-    if (this.context_menu_item_configure == null) {
+-      this.context_menu_item_configure = new PopupMenu.PopupIconMenuItem(_("Configure..."),
+-        "xsi-preferences",
+-        St.IconType.SYMBOLIC);
+-      this.context_menu_item_configure.connect('activate',
+-        () => { Util.spawnCommandLineAsync("cinnamon-settings nightlight"); }
+-      );
+-    }
+-    if (items.indexOf(this.context_menu_item_configure) == -1) {
+-      this._applet_context_menu.addMenuItem(this.context_menu_item_configure);
+-    }
+-  }
+-
+-  on_applet_clicked() {
+-    this.gsettings.set_boolean("night-light-enabled", !this.nightLightEnabled);
+-    this.set_icon();
+-  }
+-
+-  set_icon() {
+-    this.nightLightEnabled = this.gsettings.get_boolean("night-light-enabled");
+-    if (this.nightLightEnabled) {
+-      this.set_applet_icon_symbolic_name("xsi-night-light-symbolic");
+-    } else {
+-      this.set_applet_icon_symbolic_name("xsi-night-light-disabled-symbolic");
+-    }
+-  }
+-
+-  on_applet_removed_from_panel() {
+-    this.gsettings.disconnect(this.connectColorID);
+-  }
++const SCHEMA = "org.cinnamon.settings-daemon.plugins.color";
++const MIN_K = 1700;
++const MAX_K = 6500;
++const PAUSE_SECONDS = 60 * 60;
++const BRIGHTNESS = [0.3, 1.0];
++const GAMMA = [0.5, 2.0];
++
++function frac(value, [lo, hi]) {
++    return Math.min(1, Math.max(0, (value - lo) / (hi - lo)));
++}
++
++function unfrac(f, [lo, hi]) {
++    return lo + f * (hi - lo);
++}
++
++// The lit displays, by the output names the settings daemon uses, passed to callback.
++// Asked of Muffin's DisplayConfig asynchronously: Muffin runs inside this process,
++// so a synchronous call (CinnamonDesktop.RRScreen.new) would wait on itself until
++// the D-Bus timeout, freezing the desktop.
++function listDisplays(callback) {
++    Gio.DBus.session.call("org.cinnamon.Muffin.DisplayConfig", "/org/cinnamon/Muffin/DisplayConfig",
++                          "org.cinnamon.Muffin.DisplayConfig", "GetResources", null, null,
++                          Gio.DBusCallFlags.NONE, 5000, null, (connection, result) => {
++        let displays = [];
++        try {
++            // outputs: a(u id, x winsys id, i crtc, au, s name, au, au, a{sv} properties)
++            let outputs = connection.call_finish(result).deep_unpack()[2];
++            for (let [id, winsysId, crtc, possible, name, modes, clones, props] of outputs) {
++                if (crtc < 0)
++                    continue;
++                let label = props["display-name"];
++                if (label instanceof GLib.Variant)
++                    label = label.unpack();
++                if (/^(eDP|LVDS|DSI)/.test(name))
++                    label = _("Built-in display");
++                label = label || name;
++                displays.push({ name: name, label: label === name ? name : `${label} (${name})` });
++            }
++        } catch (e) {
++            global.logError(`nightlight: could not list displays: ${e}`);
++        }
++        callback(displays);
++    });
++}
++
++class NightLightApplet extends Applet.IconApplet {
++    constructor(metadata, orientation, panelHeight, instanceId) {
++        super(orientation, panelHeight, instanceId);
++
++        this.settings = Gio.Settings.new(SCHEMA);
++        let schema = this.settings.settings_schema;
++        // Ocimum's settings daemon; without its patch, only the plain controls.
++        this.canAdjust = schema.has_key("display-adjustments");
++        this.canPause = schema.has_key("night-light-paused-until");
++
++        this.menuManager = new PopupMenu.PopupMenuManager(this);
++        this.menu = new Applet.AppletPopupMenu(this, orientation);
++        this.menuManager.addMenu(this.menu);
++        this._writeIds = {};
++        this._pauseTimer = 0;
++
++        this._buildMenu();
++        this.menu.connect("open-state-changed", (menu, open) => {
++            if (open)
++                this._buildDisplays();
++        });
++
++        let configure = new PopupMenu.PopupIconMenuItem(_("Configure..."), "xsi-preferences", St.IconType.SYMBOLIC);
++        configure.connect("activate", () => Util.spawnCommandLineAsync("cinnamon-settings nightlight"));
++        this._applet_context_menu.addMenuItem(configure);
++
++        this._changedId = this.settings.connect("changed", () => this._sync());
++        this._sync();
++    }
++
++    _buildMenu() {
++        this.switchItem = new PopupMenu.PopupSwitchMenuItem(_("Night Light"), false);
++        this.switchItem.connect("toggled", (item, state) => {
++            this.settings.set_boolean("night-light-enabled", state);
++        });
++        this.menu.addMenuItem(this.switchItem);
++
++        this.warmthLabel = new PopupMenu.PopupMenuItem("", { reactive: false });
++        this.menu.addMenuItem(this.warmthLabel);
++        this.warmthSlider = new PopupMenu.PopupSliderMenuItem(0);
++        this.warmthSlider.connect("value-changed", (slider, value) => {
++            // Right is warmer.
++            let kelvin = Math.round(unfrac(1 - value, [MIN_K, MAX_K]) / 100) * 100;
++            this._setWarmthLabel(kelvin);
++            this._write("temperature", () => {
++                this.settings.set_uint("night-light-temperature", kelvin);
++                this._preview();
++            });
++        });
++        this.menu.addMenuItem(this.warmthSlider);
++
++        this.scheduleMenu = new PopupMenu.PopupSubMenuMenuItem(_("Schedule"));
++        this.scheduleItems = {};
++        for (let [mode, label] of [["auto", _("Sunset to sunrise")],
++                                   ["manual", _("Custom hours...")],
++                                   ["always", _("Always on")]]) {
++            let item = new PopupMenu.PopupMenuItem(label);
++            item.connect("activate", () => {
++                this.settings.set_string("night-light-schedule-mode", mode);
++                if (mode === "manual")
++                    Util.spawnCommandLineAsync("cinnamon-settings nightlight");
++            });
++            this.scheduleItems[mode] = item;
++            this.scheduleMenu.menu.addMenuItem(item);
++        }
++        this.menu.addMenuItem(this.scheduleMenu);
++
++        if (this.canPause) {
++            this.pauseItem = new PopupMenu.PopupIconMenuItem("", "xsi-media-playback-pause-symbolic", St.IconType.SYMBOLIC);
++            this.pauseItem.connect("activate", () => {
++                let until = this._pausedUntil() ? 0 : Math.floor(Date.now() / 1000) + PAUSE_SECONDS;
++                this.settings.set_int64("night-light-paused-until", until);
++            });
++            this.menu.addMenuItem(this.pauseItem);
++        }
++
++        // Filled when the menu opens (_buildDisplays), so displays plugged in later show.
++        this.displaySection = new PopupMenu.PopupMenuSection();
++        this.menu.addMenuItem(this.displaySection);
++
++        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
++        let settingsItem = new PopupMenu.PopupIconMenuItem(_("Night Light Settings"), "xsi-preferences", St.IconType.SYMBOLIC);
++        settingsItem.connect("activate", () => Util.spawnCommandLineAsync("cinnamon-settings nightlight"));
++        this.menu.addMenuItem(settingsItem);
++    }
++
++    // Brightness and gamma sliders for each lit display, built when the menu opens.
++    _buildDisplays() {
++        if (this.canAdjust)
++            listDisplays(displays => this._fillDisplays(displays));
++    }
++
++    _fillDisplays(displays) {
++        this.displaySection.removeAll();
++        let adjustments = this._adjustments();
++        for (let display of displays) {
++            let [brightness, gamma] = adjustments[display.name] || [1.0, 1.0];
++            this.displaySection.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
++            let header = new PopupMenu.PopupMenuItem(display.label, { reactive: false });
++            header.label.set_style("font-weight: bold;");
++            this.displaySection.addMenuItem(header);
++
++            let bLabel = new PopupMenu.PopupMenuItem("", { reactive: false });
++            let bSlider = new PopupMenu.PopupSliderMenuItem(frac(brightness, BRIGHTNESS));
++            let gLabel = new PopupMenu.PopupMenuItem("", { reactive: false });
++            let gSlider = new PopupMenu.PopupSliderMenuItem(frac(gamma, GAMMA));
++            let setLabels = (b, g) => {
++                bLabel.label.set_text(_("Brightness: %d%%").format(Math.round(b * 100)));
++                gLabel.label.set_text(_("Gamma: %s").format(g.toFixed(2)));
++            };
++            setLabels(brightness, gamma);
++            let update = () => {
++                let b = Math.round(unfrac(bSlider.value, BRIGHTNESS) * 100) / 100;
++                let g = Math.round(unfrac(gSlider.value, GAMMA) * 100) / 100;
++                setLabels(b, g);
++                this._write(`display-${display.name}`, () => this._setAdjustment(display.name, b, g));
++            };
++            bSlider.connect("value-changed", update);
++            gSlider.connect("value-changed", update);
++            for (let item of [bLabel, bSlider, gLabel, gSlider])
++                this.displaySection.addMenuItem(item);
++
++            let reset = new PopupMenu.PopupIconMenuItem(_("Reset"), "xsi-edit-undo-symbolic", St.IconType.SYMBOLIC);
++            reset.connect("activate", () => {
++                this._setAdjustment(display.name, 1.0, 1.0);
++                bSlider.setValue(frac(1.0, BRIGHTNESS));
++                gSlider.setValue(frac(1.0, GAMMA));
++                setLabels(1.0, 1.0);
++            });
++            this.displaySection.addMenuItem(reset);
++        }
++    }
++
++    _adjustments() {
++        return this.settings.get_value("display-adjustments").deep_unpack();
++    }
++
++    _setAdjustment(name, brightness, gamma) {
++        let all = this._adjustments();
++        if (brightness === 1.0 && gamma === 1.0)
++            delete all[name];
++        else
++            all[name] = [brightness, gamma];
++        this.settings.set_value("display-adjustments", new GLib.Variant("a{s(dd)}", all));
++    }
++
++    // Slider moves write at most every 100 ms.
++    _write(key, fn) {
++        if (this._writeIds[key])
++            GLib.source_remove(this._writeIds[key]);
++        this._writeIds[key] = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
++            this._writeIds[key] = 0;
++            fn();
++            return GLib.SOURCE_REMOVE;
++        });
++    }
++
++    // Show the new warmth now, even outside the night-light hours.
++    _preview() {
++        Gio.DBus.session.call("org.cinnamon.SettingsDaemon.Color", "/org/cinnamon/SettingsDaemon/Color",
++                              "org.cinnamon.SettingsDaemon.Color", "NightLightPreview",
++                              new GLib.Variant("(u)", [5]), null, Gio.DBusCallFlags.NONE, -1, null, null);
++    }
++
++    _pausedUntil() {
++        if (!this.canPause)
++            return 0;
++        let until = this.settings.get_int64("night-light-paused-until");
++        return until > Date.now() / 1000 ? until : 0;
++    }
++
++    _setWarmthLabel(kelvin) {
++        this.warmthLabel.label.set_text(_("Warmth: %d K").format(kelvin));
++    }
++
++    _sync() {
++        let enabled = this.settings.get_boolean("night-light-enabled");
++        let kelvin = this.settings.get_uint("night-light-temperature");
++        let mode = this.settings.get_string("night-light-schedule-mode");
++        let paused = this._pausedUntil();
++
++        this.switchItem.setToggleState(enabled);
++        this._setWarmthLabel(kelvin);
++        if (!this._writeIds["temperature"])
++            this.warmthSlider.setValue(1 - frac(kelvin, [MIN_K, MAX_K]));
++        for (let m in this.scheduleItems)
++            this.scheduleItems[m].setOrnament(PopupMenu.OrnamentType.DOT, m === mode);
++        this.scheduleMenu.label.set_text(_("Schedule: %s").format(
++            { auto: _("Sunset to sunrise"), manual: _("Custom hours"), always: _("Always on") }[mode] || mode));
++
++        if (this.pauseItem) {
++            this.pauseItem.actor.visible = enabled;
++            if (paused) {
++                let time = GLib.DateTime.new_from_unix_local(paused).format("%R");
++                this.pauseItem.label.set_text(_("Paused until %s. Resume").format(time));
++                this.pauseItem.setIconName("xsi-media-playback-start-symbolic");
++            } else {
++                this.pauseItem.label.set_text(_("Pause for an hour"));
++                this.pauseItem.setIconName("xsi-media-playback-pause-symbolic");
++            }
++        }
++        // Back in sync when a pause ends.
++        if (this._pauseTimer) {
++            GLib.source_remove(this._pauseTimer);
++            this._pauseTimer = 0;
++        }
++        if (paused) {
++            let seconds = Math.max(1, paused - Math.floor(Date.now() / 1000) + 1);
++            this._pauseTimer = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, seconds, () => {
++                this._pauseTimer = 0;
++                this._sync();
++                return GLib.SOURCE_REMOVE;
++            });
++        }
++
++        let on = enabled && !paused;
++        this.set_applet_icon_symbolic_name(on ? "xsi-night-light-symbolic" : "xsi-night-light-disabled-symbolic");
++        let tooltip = !enabled ? _("Night Light is off")
++                    : paused ? _("Night Light is paused")
++                    : _("Night Light is on (%d K)").format(kelvin);
++        this.set_applet_tooltip(tooltip);
++    }
++
++    on_applet_clicked() {
++        this.menu.toggle();
++    }
++
++    on_applet_removed_from_panel() {
++        this.settings.disconnect(this._changedId);
++        for (let key in this._writeIds)
++            if (this._writeIds[key])
++                GLib.source_remove(this._writeIds[key]);
++        if (this._pauseTimer)
++            GLib.source_remove(this._pauseTimer);
++    }
+ }
+ 
+-function main(metadata, orientation, panel_height, instance_id) {
+-    return new NightLightSwitch(metadata, orientation, panel_height, instance_id);
++function main(metadata, orientation, panelHeight, instanceId) {
++    return new NightLightApplet(metadata, orientation, panelHeight, instanceId);
+ }
+diff --git a/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/metadata.json b/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/metadata.json
+index 13ebaf9..1705722 100644
+--- a/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/metadata.json
++++ b/files/usr/share/cinnamon/applets/nightlight@cinnamon.org/metadata.json
+@@ -1,5 +1,5 @@
+ {
+-    "description": "Activate/deactivate Night Light mode.",
++    "description": "Night Light, its warmth and schedule, and each display's brightness and gamma. Screenshots keep their true colours.",
+     "icon": "cs-nightlight",
+     "max-instances": "1",
+     "hide-configuration": true,
+diff --git a/files/usr/share/cinnamon/cinnamon-settings/modules/cs_nightlight.py b/files/usr/share/cinnamon/cinnamon-settings/modules/cs_nightlight.py
+index 1fe8595..1836f85 100644
+--- a/files/usr/share/cinnamon/cinnamon-settings/modules/cs_nightlight.py
++++ b/files/usr/share/cinnamon/cinnamon-settings/modules/cs_nightlight.py
+@@ -4,6 +4,9 @@ from bin.SettingsWidgets import SidePage
+ from bin import util
+ from xapp.GSettingsWidgets import *
+ 
++import gi
++from gi.repository import Gdk, Gio, GLib, Gtk
++
+ COLOR_SCHEMA = "org.cinnamon.settings-daemon.plugins.color"
+ 
+ class Module:
+@@ -64,6 +67,15 @@ class Module:
+             section.need_separator = False
+             section.add_reveal_row(ScheduleWidget(size_group), COLOR_SCHEMA, "night-light-schedule-mode", values=["manual"])
+ 
++            # Ocimum (TulsiOS ADR 0043): each display's brightness and gamma, in the
++            # same gamma ramp as the night light (so screenshots aren't affected).
++            settings = Gio.Settings(schema_id=COLOR_SCHEMA)
++            if settings.props.settings_schema.has_key("display-adjustments"):
++                for name, label in list_displays():
++                    section = page.add_section(label)
++                    section.add_row(AdjustmentRow(settings, name, 0, _("Brightness"), 0.3, 1.0, "%d%%", 100))
++                    section.add_row(AdjustmentRow(settings, name, 1, _("Gamma"), 0.5, 2.0, "%.2f", 1))
++
+     def preview_night_light(self, button):
+         proxy = Gio.DBusProxy.new_sync(
+             Gio.bus_get_sync(Gio.BusType.SESSION, None),
+@@ -77,6 +89,56 @@ class Module:
+         proxy.NightLightPreview("(u)", 10)
+ 
+ 
++def list_displays():
++    """[(output name, label)] of the connected displays, as the settings daemon names them."""
++    try:
++        gi.require_version("CinnamonDesktop", "3.0")
++        from gi.repository import CinnamonDesktop
++        screen = CinnamonDesktop.RRScreen.new(Gdk.Screen.get_default())
++    except Exception as e:
++        print(f"Night Light: could not list displays: {e}")
++        return []
++    displays = []
++    for output in screen.list_outputs():
++        if output.get_crtc() is None:
++            continue
++        name = output.get_name()
++        label = _("Built-in display") if output.is_builtin_display() else (output.get_display_name() or name)
++        displays.append((name, name if label == name else f"{label} ({name})"))
++    return displays
++
++
++class AdjustmentRow(SettingsWidget):
++    """One slider for one display's brightness or gamma (display-adjustments)."""
++
++    def __init__(self, settings, output, index, label, lower, upper, fmt, scale):
++        super().__init__()
++        self.settings, self.output, self.index = settings, output, index
++        self.pack_start(Gtk.Label(label=label, xalign=0), False, False, 0)
++        self.content_widget = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lower, upper, 0.01)
++        self.content_widget.set_hexpand(True)
++        self.content_widget.set_size_request(300, -1)
++        self.content_widget.connect("format-value", lambda _s, v: fmt % (v * scale))
++        self.content_widget.add_mark(1.0, Gtk.PositionType.BOTTOM, None)
++        self.content_widget.set_value(self.current()[index])
++        self.content_widget.connect("value-changed", self.on_changed)
++        self.pack_end(self.content_widget, True, True, 0)
++        self.show_all()
++
++    def current(self):
++        return self.settings.get_value("display-adjustments").unpack().get(self.output, (1.0, 1.0))
++
++    def on_changed(self, scale):
++        values = list(self.current())
++        values[self.index] = round(scale.get_value(), 2)
++        adjustments = self.settings.get_value("display-adjustments").unpack()
++        if values == [1.0, 1.0]:
++            adjustments.pop(self.output, None)
++        else:
++            adjustments[self.output] = tuple(values)
++        self.settings.set_value("display-adjustments", GLib.Variant("a{s(dd)}", adjustments))
++
++
+ class TimeSpinButton(Gtk.SpinButton):
+     def __init__(self, *args, **kwargs):
+         super(TimeSpinButton, self).__init__(*args, **kwargs)

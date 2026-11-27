@@ -32,14 +32,22 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon-settings-daemon";
-  version = "6.8.1";
+  # TulsiOS: Ocimum's patches on top of Cinnamon's release.
+  version = "6.8.1-ocimum.1";
 
   src = fetchFromGitHub {
     owner = "linuxmint";
     repo = "cinnamon-settings-daemon";
-    tag = finalAttrs.version;
+    tag = "6.8.1";
     hash = "sha256-F+Fr9nRfvUstW3K99yhKvdTng6K7xXYCFHWQ7tzzYZs=";
   };
+
+  patches = [
+    # Ocimum (TulsiOS ADR 0043): per-display brightness and gamma in the colour
+    # plugin's gamma ramp (display-adjustments), and pausing the night light
+    # (night-light-paused-until).
+    ./ocimum-gamma.patch
+  ];
 
   buildInputs = [
     cinnamon-desktop

@@ -78,7 +78,7 @@ in
 stdenv.mkDerivation (finalAttrs: {
   pname = "cinnamon";
   # TulsiOS: Ocimum Desktop, a hard fork of Cinnamon 6.8 (branch "ocimum", see its OCIMUM.md).
-  version = "6.8.0-ocimum.5";
+  version = "6.8.0-ocimum.6";
 
   src = fetchFromGitHub {
     owner = "lukskrp";
@@ -90,6 +90,9 @@ stdenv.mkDerivation (finalAttrs: {
   patches = [
     ./use-sane-install-dir.patch
     ./libdir.patch
+    # LOCAL, uncommitted: the Night Light applet (TulsiOS ADR 0043), until it is
+    # committed to ocimum-desktop and the rev above is bumped.
+    ./ocimum-night-light.patch
   ];
 
   buildInputs = [

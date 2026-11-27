@@ -1,0 +1,306 @@
+diff --git a/data/org.cinnamon.settings-daemon.plugins.color.gschema.xml.in.in b/data/org.cinnamon.settings-daemon.plugins.color.gschema.xml.in.in
+index 9806d04..1338500 100644
+--- a/data/org.cinnamon.settings-daemon.plugins.color.gschema.xml.in.in
++++ b/data/org.cinnamon.settings-daemon.plugins.color.gschema.xml.in.in
+@@ -45,5 +45,16 @@
+       <summary>The last detected position</summary>
+       <description>When location services are available this represents the last detected location. The default value is an invalid value to ensure it is always updated at startup.</description>
+     </key>
++    <!-- Ocimum -->
++    <key name="display-adjustments" type="a{s(dd)}">
++      <default>{}</default>
++      <summary>Brightness and gamma of each display</summary>
++      <description>By output name (for example “HDMI-1”): a brightness from 0.3 to 1.0 and a gamma from 0.5 to 2.0, applied in the display's gamma ramp together with the night light's color temperature. Displays not listed use (1.0, 1.0). Like the night light, this changes what the monitor shows, not screenshots.</description>
++    </key>
++    <key name="night-light-paused-until" type="x">
++      <default>0</default>
++      <summary>Night light paused until</summary>
++      <description>Unix time until which the night light is off, as if disabled; 0 when it isn't paused.</description>
++    </key>
+   </schema>
+ </schemalist>
+diff --git a/plugins/color/csd-color-state.c b/plugins/color/csd-color-state.c
+index addf64b..adf20a6 100644
+--- a/plugins/color/csd-color-state.c
++++ b/plugins/color/csd-color-state.c
+@@ -24,6 +24,7 @@
+ #include <colord.h>
+ #include <gdk/gdk.h>
+ #include <stdlib.h>
++#include <math.h>
+ #include <lcms2.h>
+ #include <canberra-gtk.h>
+ 
+@@ -59,6 +60,8 @@ struct _CsdColorState
+         gboolean         session_is_active;
+         GHashTable      *device_assign_hash;
+         guint            color_temperature;
++        /* Ocimum: per-display brightness and gamma (display-adjustments) */
++        GSettings       *settings;
+ };
+ 
+ static void     csd_color_state_class_init  (CsdColorStateClass *klass);
+@@ -432,8 +435,43 @@ out:
+         return ret;
+ }
+ 
++/* Ocimum: the person's brightness (0.3-1) and gamma (0.5-2) for this display,
++ * from display-adjustments; (1, 1) when it isn't listed. */
++static void
++ccm_session_get_adjustment (CsdColorState *state,
++                            GnomeRROutput *output,
++                            gdouble *brightness,
++                            gdouble *gamma)
++{
++        GVariant *adjustments;
++        const gchar *name;
++
++        *brightness = 1.0;
++        *gamma = 1.0;
++        name = gnome_rr_output_get_name (output);
++        if (state->settings == NULL || name == NULL)
++                return;
++        adjustments = g_settings_get_value (state->settings, "display-adjustments");
++        if (!g_variant_lookup (adjustments, name, "(dd)", brightness, gamma)) {
++                *brightness = 1.0;
++                *gamma = 1.0;
++        }
++        g_variant_unref (adjustments);
++        *brightness = CLAMP (*brightness, 0.3, 1.0);
++        *gamma = CLAMP (*gamma, 0.5, 2.0);
++}
++
++/* Ocimum: one ramp entry, curve value (0-1) through gamma, white point and brightness. */
++static guint32
++ccm_session_adjust (gdouble value, gdouble channel, gdouble brightness, gdouble gamma)
++{
++        value = pow (CLAMP (value, 0.0, 1.0), 1.0 / gamma) * channel * brightness;
++        return (guint32) (CLAMP (value, 0.0, 1.0) * (gdouble) 0xffff);
++}
++
+ static GPtrArray *
+-ccm_session_generate_vcgt (CdProfile *profile, guint color_temperature, guint size)
++ccm_session_generate_vcgt (CdProfile *profile, guint color_temperature, guint size,
++                           gdouble brightness, gdouble gamma)
+ {
+         GnomeRROutputClutItem *tmp;
+         GPtrArray *array = NULL;
+@@ -477,9 +515,9 @@ ccm_session_generate_vcgt (CdProfile *profile, guint color_temperature, guint si
+         for (i = 0; i < size; i++) {
+                 in = (gdouble) i / (gdouble) (size - 1);
+                 tmp = g_new0 (GnomeRROutputClutItem, 1);
+-                tmp->red = cmsEvalToneCurveFloat(vcgt[0], in) * temp.R * (gdouble) 0xffff;
+-                tmp->green = cmsEvalToneCurveFloat(vcgt[1], in) * temp.G * (gdouble) 0xffff;
+-                tmp->blue = cmsEvalToneCurveFloat(vcgt[2], in) * temp.B * (gdouble) 0xffff;
++                tmp->red = ccm_session_adjust (cmsEvalToneCurveFloat (vcgt[0], in), temp.R, brightness, gamma);
++                tmp->green = ccm_session_adjust (cmsEvalToneCurveFloat (vcgt[1], in), temp.G, brightness, gamma);
++                tmp->blue = ccm_session_adjust (cmsEvalToneCurveFloat (vcgt[2], in), temp.B, brightness, gamma);
+                 g_ptr_array_add (array, tmp);
+         }
+ out:
+@@ -558,7 +596,8 @@ out:
+ }
+ 
+ static gboolean
+-ccm_session_device_set_gamma (GnomeRROutput *output,
++ccm_session_device_set_gamma (CsdColorState *state,
++                              GnomeRROutput *output,
+                               CdProfile *profile,
+                               guint color_temperature,
+                               GError **error)
+@@ -566,6 +605,7 @@ ccm_session_device_set_gamma (GnomeRROutput *output,
+         gboolean ret = FALSE;
+         guint size;
+         GPtrArray *clut = NULL;
++        gdouble brightness, gamma;
+ 
+         /* create a lookup table */
+         size = gnome_rr_output_get_gamma_size (output);
+@@ -573,7 +613,8 @@ ccm_session_device_set_gamma (GnomeRROutput *output,
+                 ret = TRUE;
+                 goto out;
+         }
+-        clut = ccm_session_generate_vcgt (profile, color_temperature, size);
++        ccm_session_get_adjustment (state, output, &brightness, &gamma);
++        clut = ccm_session_generate_vcgt (profile, color_temperature, size, brightness, gamma);
+         if (clut == NULL) {
+                 g_set_error_literal (error,
+                                      CSD_COLOR_MANAGER_ERROR,
+@@ -593,17 +634,19 @@ out:
+ }
+ 
+ static gboolean
+-ccm_session_device_reset_gamma (GnomeRROutput *output,
++ccm_session_device_reset_gamma (CsdColorState *state,
++                                GnomeRROutput *output,
+                                 guint color_temperature,
+                                 GError **error)
+ {
+         gboolean ret;
+         guint i;
+         guint size;
+-        guint32 value;
++        gdouble value;
+         GPtrArray *clut;
+         GnomeRROutputClutItem *data;
+         CdColorRGB temp;
++        gdouble brightness, gamma;
+ 
+         /* create a linear ramp */
+         g_debug ("falling back to dummy ramp");
+@@ -625,12 +668,13 @@ ccm_session_device_reset_gamma (GnomeRROutput *output,
+                          color_temperature, temp.R, temp.G, temp.B);
+         }
+ 
++        ccm_session_get_adjustment (state, output, &brightness, &gamma);
+         for (i = 0; i < size; i++) {
+-                value = (i * 0xffff) / (size - 1);
++                value = (gdouble) i / (gdouble) (size - 1);
+                 data = g_new0 (GnomeRROutputClutItem, 1);
+-                data->red = value * temp.R;
+-                data->green = value * temp.G;
+-                data->blue = value * temp.B;
++                data->red = ccm_session_adjust (value, temp.R, brightness, gamma);
++                data->green = ccm_session_adjust (value, temp.G, brightness, gamma);
++                data->blue = ccm_session_adjust (value, temp.B, brightness, gamma);
+                 g_ptr_array_add (clut, data);
+         }
+ 
+@@ -817,7 +861,8 @@ ccm_session_device_assign_profile_connect_cb (GObject *object,
+         /* create a vcgt for this icc file */
+         ret = cd_profile_get_has_vcgt (profile);
+         if (ret) {
+-                ret = ccm_session_device_set_gamma (output,
++                ret = ccm_session_device_set_gamma (state,
++                                                    output,
+                                                     profile,
+                                                     state->color_temperature,
+                                                     &error);
+@@ -829,7 +874,8 @@ ccm_session_device_assign_profile_connect_cb (GObject *object,
+                         goto out;
+                 }
+         } else {
+-                ret = ccm_session_device_reset_gamma (output,
++                ret = ccm_session_device_reset_gamma (state,
++                                                      output,
+                                                       state->color_temperature,
+                                                       &error);
+                 if (!ret) {
+@@ -982,7 +1028,8 @@ ccm_session_device_assign_connect_cb (GObject *object,
+                 }
+ 
+                 /* reset, as we want linear profiles for profiling */
+-                ret = ccm_session_device_reset_gamma (output,
++                ret = ccm_session_device_reset_gamma (state,
++                                                      output,
+                                                       state->color_temperature,
+                                                       &error);
+                 if (!ret) {
+@@ -1532,6 +1579,14 @@ csd_color_state_class_init (CsdColorStateClass *klass)
+         object_class->finalize = csd_color_state_finalize;
+ }
+ 
++static void
++ccm_session_adjustments_changed_cb (GSettings *settings,
++                                    const gchar *key,
++                                    gpointer user_data)
++{
++        ccm_session_set_gamma_for_all_devices (CSD_COLOR_STATE (user_data));
++}
++
+ static void
+ csd_color_state_init (CsdColorState *state)
+ {
+@@ -1565,6 +1620,11 @@ csd_color_state_init (CsdColorState *state)
+         state->color_temperature = CSD_COLOR_TEMPERATURE_DEFAULT;
+ 
+         state->client = cd_client_new ();
++
++        /* Ocimum: per-display brightness and gamma, applied with the temperature */
++        state->settings = g_settings_new ("org.cinnamon.settings-daemon.plugins.color");
++        g_signal_connect (state->settings, "changed::display-adjustments",
++                          G_CALLBACK (ccm_session_adjustments_changed_cb), state);
+ }
+ 
+ static void
+@@ -1581,6 +1641,7 @@ csd_color_state_finalize (GObject *object)
+         g_clear_object (&state->cancellable);
+         g_clear_object (&state->client);
+         g_clear_object (&state->session);
++        g_clear_object (&state->settings);
+         g_clear_pointer (&state->edid_cache, g_hash_table_destroy);
+         g_clear_pointer (&state->device_assign_hash, g_hash_table_destroy);
+         g_clear_object (&state->state_screen);
+diff --git a/plugins/color/csd-night-light.c b/plugins/color/csd-night-light.c
+index 249fdbd..c0f8ef5 100644
+--- a/plugins/color/csd-night-light.c
++++ b/plugins/color/csd-night-light.c
+@@ -47,6 +47,8 @@ struct _CsdNightLight {
+         gdouble            smooth_target_temperature;
+         GCancellable      *cancellable;
+         GDateTime         *datetime_override;
++        /* Ocimum: rechecks when night-light-paused-until passes */
++        guint              pause_id;
+ };
+ 
+ enum {
+@@ -249,6 +251,34 @@ csd_night_light_set_active (CsdNightLight *self, gboolean active)
+         g_object_notify (G_OBJECT (self), "active");
+ }
+ 
++static gboolean
++night_light_pause_ended_cb (gpointer user_data)
++{
++        CsdNightLight *self = CSD_NIGHT_LIGHT (user_data);
++        self->pause_id = 0;
++        night_light_recheck (self);
++        return G_SOURCE_REMOVE;
++}
++
++/* Ocimum: TRUE while night-light-paused-until is in the future; then a one-shot
++ * timeout rechecks when it ends. */
++static gboolean
++night_light_paused (CsdNightLight *self, GDateTime *dt_now)
++{
++        gint64 until = g_settings_get_int64 (self->settings, "night-light-paused-until");
++        gint64 now = g_date_time_to_unix (dt_now);
++
++        if (self->pause_id != 0) {
++                g_source_remove (self->pause_id);
++                self->pause_id = 0;
++        }
++        if (until <= now)
++                return FALSE;
++        self->pause_id = g_timeout_add_seconds ((guint) MIN (until - now + 1, G_MAXUINT),
++                                                night_light_pause_ended_cb, self);
++        return TRUE;
++}
++
+ static void
+ night_light_recheck (CsdNightLight *self)
+ {
+@@ -275,6 +305,13 @@ night_light_recheck (CsdNightLight *self)
+                 return;
+         }
+ 
++        /* Ocimum: paused (the applet's "Pause for an hour") */
++        if (night_light_paused (self, dt_now)) {
++                g_debug ("night light paused, resetting");
++                csd_night_light_set_active (self, FALSE);
++                return;
++        }
++
+         /* schedule-mode */
+         switch (g_settings_get_enum (self->settings, "night-light-schedule-mode")) {
+         case NIGHT_LIGHT_SCHEDULE_ALWAYS_ON:
+@@ -563,6 +600,10 @@ csd_night_light_finalize (GObject *object)
+ 
+         poll_timeout_destroy (self);
+         poll_smooth_destroy (self);
++        if (self->pause_id != 0) {
++                g_source_remove (self->pause_id);
++                self->pause_id = 0;
++        }
+ 
+         g_clear_object (&self->settings);
+         g_clear_pointer (&self->datetime_override, g_date_time_unref);
