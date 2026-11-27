@@ -83,8 +83,8 @@ stdenv.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "lukskrp";
     repo = "ocimum-desktop";
-    rev = "2720dbe5af8952e268672f799df72281fa862b50";
-    hash = "sha256-JXoCdwzxh1iQuxrBvnwJorbd9lfMR5+mFRz0w+nZbVw=";
+    rev = "aa6803f820ef36dea1abb32e020b9f77a5ddc8f6";
+    hash = "sha256-+lkWp+N8MZu7yAEjmdXcV4SM4CkECZqQKQAf9DDFnqI=";
   };
 
   patches = [
