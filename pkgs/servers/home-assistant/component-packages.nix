@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2026.11.2";
+  version = "2026.11.3";
   components = {
     "3_day_blinds" =
       ps: with ps; [
@@ -912,11 +912,12 @@
       ps:
       with ps;
       [
+        bluetti-modbus
         modbus-connection
         pymodbus
         tmodbus
       ]
-      ++ modbus-connection.optional-dependencies.tmodbus; # missing inputs: bluetti-modbus
+      ++ modbus-connection.optional-dependencies.tmodbus;
     "bmw_connected_drive" =
       ps: with ps; [
       ];
@@ -3161,7 +3162,8 @@
       ];
     "hp_printer" =
       ps: with ps; [
-      ]; # missing inputs: aiohpprinter
+        aiohpprinter
+      ];
     "hr_energy_qube" =
       ps: with ps; [
         ifaddr
@@ -4190,7 +4192,8 @@
       ];
     "libresync" =
       ps: with ps; [
-      ]; # missing inputs: aiolibresync
+        aiolibresync
+      ];
     "lichess" =
       ps: with ps; [
         aiolichess
@@ -4325,7 +4328,8 @@
       ];
     "london_air" =
       ps: with ps; [
-      ]; # missing inputs: pylondonair
+        pylondonair
+      ];
     "london_underground" =
       ps: with ps; [
         london-tube-status
@@ -4446,8 +4450,9 @@
         aiohasupervisor
         aiousbwatcher
         ifaddr
+        marantz-rs232
         serialx
-      ]; # missing inputs: marantz-rs232
+      ];
     "marketplace" =
       ps: with ps; [
         aiogithubapi
@@ -4663,7 +4668,8 @@
       ];
     "mijn_farmad_apotheek" =
       ps: with ps; [
-      ]; # missing inputs: aiofarmad
+        aiofarmad
+      ];
     "mijndomein_energie" =
       ps: with ps; [
       ];
@@ -5035,7 +5041,8 @@
       ];
     "nature_remo" =
       ps: with ps; [
-      ]; # missing inputs: aionatureremo
+        aionatureremo
+      ];
     "neato" =
       ps: with ps; [
         pybotvac
@@ -5351,12 +5358,13 @@
         home-assistant-intents
         ifaddr
         mutagen
+        okokscale
         pymicro-vad
         pysmlight
         pyspeex-noise
         serialx
         zeroconf
-      ]; # missing inputs: okokscale
+      ];
     "olimpia_splendid" =
       ps: with ps; [
       ];
@@ -6253,7 +6261,8 @@
       ];
     "rainbowminer" =
       ps: with ps; [
-      ]; # missing inputs: rainbowminer-api-client
+        rainbowminer-api-client
+      ];
     "rainforest_eagle" =
       ps: with ps; [
         aioeagle
@@ -6444,7 +6453,8 @@
       ];
     "rituals_perfume_genie" =
       ps: with ps; [
-      ]; # missing inputs: ritualsgenie
+        ritualsgenie
+      ];
     "rmvtransport" =
       ps: with ps; [
         pyrmvtransport
@@ -6574,7 +6584,8 @@
       ];
     "saj" =
       ps: with ps; [
-      ]; # missing inputs: aiosaj
+        aiosaj
+      ];
     "samsam" =
       ps: with ps; [
       ];
@@ -6677,7 +6688,8 @@
     "sensecap_lorawan" =
       ps: with ps; [
         lorawan-connection
-      ]; # missing inputs: sensecap-lorawan
+        sensecap-lorawan
+      ];
     "sensibo" =
       ps: with ps; [
         pysensibo
@@ -6920,7 +6932,8 @@
       ];
     "skoda" =
       ps: with ps; [
-      ]; # missing inputs: skoda-public-api
+        skoda-public-api
+      ];
     "sky_hub" =
       ps: with ps; [
         pyskyqhub
@@ -7007,7 +7020,8 @@
       ];
     "smartyplants" =
       ps: with ps; [
-      ]; # missing inputs: pysmartyplants
+        pysmartyplants
+      ];
     "smhi" =
       ps: with ps; [
         pysmhi
@@ -7127,7 +7141,8 @@
       ];
     "solyx_energy_cloud" =
       ps: with ps; [
-      ]; # missing inputs: solyx-energy-api-client
+        solyx-energy-api-client
+      ];
     "soma" =
       ps: with ps; [
         pysoma
@@ -7304,13 +7319,14 @@
         hassil
         home-assistant-intents
         ifaddr
+        lighthouse-ble
         mutagen
         pymicro-vad
         pysmlight
         pyspeex-noise
         serialx
         zeroconf
-      ]; # missing inputs: lighthouse-ble
+      ];
     "steinway_lyngdorf" =
       ps: with ps; [
       ];
@@ -8628,7 +8644,8 @@
       ];
     "xiaomi_weather" =
       ps: with ps; [
-      ]; # missing inputs: xiaomi-weather
+        xiaomi-weather
+      ];
     "xmpp" =
       ps: with ps; [
         emoji
@@ -8961,6 +8978,7 @@
     "bluetooth"
     "bluetooth_adapters"
     "bluetooth_le_tracker"
+    "bluetti_modbus"
     "bmw_connected_drive"
     "bond"
     "bosch_alarm"
@@ -9289,6 +9307,7 @@
     "honeywell_string_lights"
     "hortimax"
     "hotspring"
+    "hp_printer"
     "hr_energy_qube"
     "html5"
     "http"
@@ -9411,6 +9430,7 @@
     "lg_tv_rs232"
     "libre_hardware_monitor"
     "librenms"
+    "libresync"
     "lichess"
     "lidarr"
     "liebherr"
@@ -9434,6 +9454,7 @@
     "logbook"
     "logger"
     "lojack"
+    "london_air"
     "london_underground"
     "lookin"
     "loqed"
@@ -9453,6 +9474,7 @@
     "manual_mqtt"
     "map_tiles"
     "marantz_infrared"
+    "marantz_rs232"
     "marketplace"
     "marytts"
     "mastodon"
@@ -9484,6 +9506,7 @@
     "microsoft"
     "midea"
     "miele"
+    "mijn_farmad_apotheek"
     "mikrotik"
     "mill"
     "min_max"
@@ -9532,6 +9555,7 @@
     "namecheapdns"
     "nanoleaf"
     "nasweb"
+    "nature_remo"
     "neato"
     "nederlandse_spoorwegen"
     "neopool"
@@ -9581,6 +9605,7 @@
     "occupancy"
     "octoprint"
     "ohme"
+    "okok_scale"
     "ollama"
     "omie"
     "omnilogic"
@@ -9698,6 +9723,7 @@
     "radio_frequency"
     "radiotherm"
     "rainbird"
+    "rainbowminer"
     "rainforest_eagle"
     "rainforest_raven"
     "rainmachine"
@@ -9728,6 +9754,7 @@
     "ridwell"
     "ring"
     "risco"
+    "rituals_perfume_genie"
     "rmvtransport"
     "roborock"
     "roku"
@@ -9744,6 +9771,7 @@
     "ruuvitag_ble"
     "rympro"
     "sabnzbd"
+    "saj"
     "samsung_exlink"
     "samsung_infrared"
     "samsungtv"
@@ -9761,6 +9789,7 @@
     "season"
     "select"
     "sense"
+    "sensecap_lorawan"
     "sensibo"
     "sensirion_ble"
     "sensor"
@@ -9786,6 +9815,7 @@
     "simplepush"
     "simplisafe"
     "siren"
+    "skoda"
     "sky_hub"
     "sky_remote"
     "skybell"
@@ -9801,6 +9831,7 @@
     "smartthings"
     "smarttub"
     "smarty"
+    "smartyplants"
     "smhi"
     "smlight"
     "smtp"
@@ -9814,6 +9845,7 @@
     "solarlog"
     "solarman"
     "solax"
+    "solyx_energy_cloud"
     "soma"
     "somfy_mylink"
     "sonarr"
@@ -9838,6 +9870,7 @@
     "statsd"
     "steam_online"
     "steamist"
+    "steamvr_base_station"
     "stiebel_eltron"
     "stookwijzer"
     "stream"
@@ -9941,6 +9974,7 @@
     "tuya"
     "twentemilieu"
     "twilio"
+    "twilio_call"
     "twinkly"
     "twitch"
     "ubus"
@@ -10041,6 +10075,7 @@
     "xiaomi_aqara"
     "xiaomi_ble"
     "xiaomi_miio"
+    "xiaomi_weather"
     "xthings_cloud"
     "yale"
     "yale_smart_alarm"

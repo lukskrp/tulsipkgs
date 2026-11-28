@@ -1018,8 +1018,6 @@ with pkgs;
 
   inherit (callPackages ../development/libraries/sdbus-cpp { }) sdbus-cpp sdbus-cpp_2;
 
-  sdkmanager = with python3Packages; toPythonApplication sdkmanager;
-
   shaperglot = with python3Packages; toPythonApplication shaperglot;
 
   ufolint = with python3Packages; toPythonApplication ufolint;
@@ -1250,6 +1248,8 @@ with pkgs;
   arduino = arduino-core.override { withGui = true; };
 
   arpack-mpi = arpack.override { useMpi = true; };
+
+  aurralPlugins = recurseIntoAttrs (callPackage ../by-name/au/aurral/plugins.nix { });
 
   authentik-outposts = recurseIntoAttrs (callPackages ../by-name/au/authentik/outposts.nix { });
 
@@ -1738,12 +1738,9 @@ with pkgs;
     };
   };
 
-  interception-tools = callPackage ../tools/inputmethods/interception-tools { };
   interception-tools-plugins = recurseIntoAttrs {
-    caps2esc = callPackage ../tools/inputmethods/interception-tools/caps2esc.nix { };
-    dual-function-keys =
-      callPackage ../tools/inputmethods/interception-tools/dual-function-keys.nix
-        { };
+    caps2esc = callPackage ../by-name/in/interception-tools/caps2esc.nix { };
+    dual-function-keys = callPackage ../by-name/in/interception-tools/dual-function-keys.nix { };
   };
 
   blacken-docs = with python3Packages; toPythonApplication blacken-docs;
@@ -1897,11 +1894,6 @@ with pkgs;
     mkFranzDerivation = callPackage ../applications/networking/instant-messengers/franz/generic.nix { };
   };
 
-  inherit (callPackages ../tools/filesystems/garage { })
-    garage_1
-    garage_2
-    ;
-
   gaugePlugins = recurseIntoAttrs (callPackage ../by-name/ga/gauge/plugins { });
 
   gawd = python3Packages.toPythonApplication python3Packages.gawd;
@@ -1928,15 +1920,6 @@ with pkgs;
   gnucap-full = gnucap.withPlugins (p: [ p.verilog ]);
 
   gnupg1 = gnupg1compat; # use config.packageOverrides if you prefer original gnupg1
-
-  gnupg24 = callPackage ../tools/security/gnupg/24.nix {
-    pinentry = if stdenv.hostPlatform.isDarwin then pinentry_mac else pinentry-gnome3;
-  };
-  gnupg = gnupg24;
-  gnupgMinimal = gnupg.override {
-    enableMinimal = true;
-    guiSupport = false;
-  };
 
   inherit (callPackage ../development/tools/godot { })
     godot3
@@ -2081,11 +2064,6 @@ with pkgs;
     isl_0_27
     ;
 
-  jamesdsp-pulse = callPackage ../by-name/ja/jamesdsp/package.nix {
-    usePipewire = false;
-    usePulseaudio = true;
-  };
-
   jc = with python3Packages; toPythonApplication jc;
 
   jello = with python3Packages; toPythonApplication jello;
@@ -2131,7 +2109,7 @@ with pkgs;
 
   lean = lean4;
 
-  limine-full = limine.override { enableAll = true; };
+  logseq = logseq-og;
 
   logstash7 = callPackage ../tools/misc/logstash/7.x.nix {
     # https://www.elastic.co/support/matrix#logstash-and-jvm
@@ -2143,8 +2121,6 @@ with pkgs;
     jre = jdk11_headless;
   };
   logstash = logstash7;
-
-  lagrange-tui = lagrange.override { enableTUI = true; };
 
   matrix-synapse-plugins = recurseIntoAttrs matrix-synapse-unwrapped.plugins;
 
@@ -2748,7 +2724,7 @@ with pkgs;
   ### SHELLS
 
   runtimeShell = "${runtimeShellPackage}${runtimeShellPackage.shellPath}";
-  runtimeShellPackage = bashNonInteractive;
+  runtimeShellPackage = if stdenv.hostPlatform.isWindows then pkgs.rubash else bashNonInteractive;
 
   bash = callPackage ../shells/bash/5.nix { };
   bashNonInteractive = lowPrio (
@@ -2871,7 +2847,7 @@ with pkgs;
 
   dprint-plugins = recurseIntoAttrs (callPackage ../by-name/dp/dprint/plugins { });
 
-  reaction-plugins = reaction.passthru.plugins;
+  reaction-plugins = recurseIntoAttrs reaction.passthru.plugins;
 
   elm2nix = haskell.lib.compose.justStaticExecutables haskellPackages.elm2nix;
 
@@ -3332,14 +3308,13 @@ with pkgs;
 
   haskellPackages = recurseIntoAttrs (
     # Prefer native-bignum to avoid linking issues with gmp;
-    # GHC 9.10 doesn't work too well with iserv-proxy.
     if stdenv.hostPlatform.isStatic then
       haskell.packages.native-bignum.ghc912
     # JS backend can't use gmp
     else if stdenv.hostPlatform.isGhcjs then
-      haskell.packages.native-bignum.ghc910
+      haskell.packages.native-bignum.ghc912
     else
-      haskell.packages.ghc910
+      haskell.packages.ghc912
   );
 
   # haskellPackages.ghc is build->host (it exposes the compiler used to build the
@@ -3353,14 +3328,13 @@ with pkgs;
   ghc =
     targetPackages.haskellPackages.ghc or (
       # Prefer native-bignum to avoid linking issues with gmp;
-      # GHC 9.10 doesn't work too well with iserv-proxy.
       if stdenv.hostPlatform.isStatic then
         haskell.compiler.native-bignum.ghc912
       # JS backend can't use GMP
       else if stdenv.targetPlatform.isGhcjs then
-        haskell.compiler.native-bignum.ghc910
+        haskell.compiler.native-bignum.ghc912
       else
-        haskell.compiler.ghc910
+        haskell.compiler.ghc912
     );
 
   # TODO(@NixOS/haskell): deprecate this alias?
@@ -3371,6 +3345,8 @@ with pkgs;
   happy = haskell.lib.compose.justStaticExecutables haskellPackages.happy;
 
   hscolour = haskell.lib.compose.justStaticExecutables haskellPackages.hscolour;
+
+  cabal-gild = haskell.lib.compose.justStaticExecutables haskellPackages.cabal-gild;
 
   cabal-install = haskell.lib.compose.justStaticExecutables haskellPackages.cabal-install;
 
@@ -3555,7 +3531,7 @@ with pkgs;
   lldb = llvmPackages.lldb;
 
   llvm = llvmPackages.llvm;
-  flang = llvmPackages_20.flang;
+  flang = llvmPackages.flang;
 
   libllvm = llvmPackages.libllvm;
   llvm-manpages = llvmPackages.llvm-manpages;
@@ -3781,15 +3757,6 @@ with pkgs;
     stdenv = clangStdenv;
   };
 
-  squirrel-sql = callPackage ../development/tools/database/squirrel-sql {
-    drivers = [
-      jtds_jdbc
-      mssql_jdbc
-      mysql_jdbc
-      postgresql_jdbc
-    ];
-  };
-
   swiftPackages = recurseIntoAttrs (callPackage ./swift-packages.nix { });
   inherit (swiftPackages)
     fetchSwiftPMDeps
@@ -3804,11 +3771,6 @@ with pkgs;
     ;
 
   swi-prolog-gui = swi-prolog.override { withGui = true; };
-
-  teyjus = callPackage ../development/compilers/teyjus {
-    inherit (ocaml-ng.ocamlPackages_4_14) buildDunePackage;
-    stdenv = gcc14Stdenv;
-  };
 
   vcard = python3Packages.toPythonApplication python3Packages.vcard;
 
@@ -4937,12 +4899,6 @@ with pkgs;
 
   gdbHostCpuOnly = gdb.override { hostCpuOnly = true; };
 
-  valgrind-light = (valgrind.override { gdb = null; }).overrideAttrs (oldAttrs: {
-    meta = oldAttrs.meta // {
-      description = "${oldAttrs.meta.description} (without GDB)";
-    };
-  });
-
   vcpkg-tool-unwrapped = vcpkg-tool.override { doWrap = false; };
 
   wild =
@@ -5913,8 +5869,9 @@ with pkgs;
   zunclient = with python313Packages; toPythonApplication python-zunclient;
 
   inherit (callPackages ../by-name/li/libressl { })
-    libressl_4_2
+    # When you remove a version here, add a notice in aliases.nix.
     libressl_4_3
+    libressl_4_4
     ;
 
   openssl = openssl_3_5;
@@ -7082,14 +7039,6 @@ with pkgs;
     enableExperimental = true;
   };
 
-  conky = callPackage ../os-specific/linux/conky (
-    {
-      lua = lua5_5;
-      inherit (linuxPackages.nvidia_x11.settings) libXNVCtrl;
-    }
-    // config.conky or { }
-  );
-
   # Darwin package set
   #
   # Even though this is a set of packages not single package, use `callPackage`
@@ -7220,21 +7169,6 @@ with pkgs;
 
   kmod = callPackage ../os-specific/linux/kmod { };
 
-  lvm2 = callPackage ../os-specific/linux/lvm2/2_03.nix {
-    # break the cyclic dependency:
-    # util-linux (non-minimal) depends (optionally, but on by default) on systemd,
-    # systemd (optionally, but on by default) on cryptsetup and cryptsetup depends on lvm2
-    util-linux = util-linuxMinimal;
-  };
-
-  lvm2_dmeventd = lvm2.override {
-    enableDmeventd = true;
-    enableCmdlib = true;
-  };
-  lvm2_vdo = lvm2_dmeventd.override {
-    enableVDO = true;
-  };
-
   mdadm = mdadm4;
 
   # minimal-bootstrap packages aren't used for anything but bootstrapping our
@@ -7281,14 +7215,6 @@ with pkgs;
       unixtools.net-tools;
 
   open-vm-tools-headless = open-vm-tools.override { withX = false; };
-
-  pam =
-    if stdenv.hostPlatform.isLinux then
-      linux-pam
-    else if stdenv.hostPlatform.isFreeBSD then
-      freebsd.libpam
-    else
-      openpam;
 
   # pam_bioapi ( see http://www.thinkwiki.org/wiki/How_to_enable_the_fingerprint_reader )
 
@@ -9040,32 +8966,6 @@ with pkgs;
     d1x-rebirth-full
     d2x-rebirth-full
     ;
-
-  factorio-experimental = factorio.override {
-    releaseType = "alpha";
-    experimental = true;
-  };
-
-  factorio-headless = factorio.override { releaseType = "headless"; };
-
-  factorio-headless-experimental = factorio.override {
-    releaseType = "headless";
-    experimental = true;
-  };
-
-  factorio-demo = factorio.override { releaseType = "demo"; };
-
-  factorio-demo-experimental = factorio.override {
-    releaseType = "demo";
-    experimental = true;
-  };
-
-  factorio-space-age = factorio.override { releaseType = "expansion"; };
-
-  factorio-space-age-experimental = factorio.override {
-    releaseType = "expansion";
-    experimental = true;
-  };
 
   factorio-utils = callPackage ../by-name/fa/factorio/utils.nix { };
 

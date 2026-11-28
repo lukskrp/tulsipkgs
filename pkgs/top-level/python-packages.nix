@@ -312,6 +312,8 @@ self: super: with self; {
 
   aioextensions = callPackage ../development/python-modules/aioextensions { };
 
+  aiofarmad = callPackage ../development/python-modules/aiofarmad { };
+
   aiofile = callPackage ../development/python-modules/aiofile { };
 
   aiofiles = callPackage ../development/python-modules/aiofiles { };
@@ -347,6 +349,8 @@ self: super: with self; {
   aiohomematic-test-support = callPackage ../development/python-modules/aiohomematic-test-support { };
 
   aiohortos = callPackage ../development/python-modules/aiohortos { };
+
+  aiohpprinter = callPackage ../development/python-modules/aiohpprinter { };
 
   aiohttp = callPackage ../development/python-modules/aiohttp { };
 
@@ -424,6 +428,8 @@ self: super: with self; {
 
   aiolibrenms = callPackage ../development/python-modules/aiolibrenms { };
 
+  aiolibresync = callPackage ../development/python-modules/aiolibresync { };
+
   aiolichess = callPackage ../development/python-modules/aiolichess { };
 
   aiolifx = callPackage ../development/python-modules/aiolifx { };
@@ -463,6 +469,8 @@ self: super: with self; {
   aionanoleaf = callPackage ../development/python-modules/aionanoleaf { };
 
   aionanoleaf2 = callPackage ../development/python-modules/aionanoleaf2 { };
+
+  aionatureremo = callPackage ../development/python-modules/aionatureremo { };
 
   aionotion = callPackage ../development/python-modules/aionotion { };
 
@@ -547,6 +555,8 @@ self: super: with self; {
   aioruuvigateway = callPackage ../development/python-modules/aioruuvigateway { };
 
   aiorwlock = callPackage ../development/python-modules/aiorwlock { };
+
+  aiosaj = callPackage ../development/python-modules/aiosaj { };
 
   aiosendspin = callPackage ../development/python-modules/aiosendspin { };
 
@@ -2605,6 +2615,8 @@ self: super: with self; {
     callPackage ../development/python-modules/bluetooth-sensor-state-data
       { };
 
+  bluetti-modbus = callPackage ../development/python-modules/bluetti-modbus { };
+
   bluezero = callPackage ../development/python-modules/bluezero { };
 
   blurhash = callPackage ../development/python-modules/blurhash { };
@@ -3225,8 +3237,6 @@ self: super: with self; {
   clarifai-grpc = callPackage ../development/python-modules/clarifai-grpc { };
 
   clarifai-protocol = callPackage ../development/python-modules/clarifai-protocol { };
-
-  class-doc = callPackage ../development/python-modules/class-doc { };
 
   classify-imports = callPackage ../development/python-modules/classify-imports { };
 
@@ -10056,6 +10066,8 @@ self: super: with self; {
 
   lightgbm = callPackage ../development/python-modules/lightgbm { };
 
+  lighthouse-ble = callPackage ../development/python-modules/lighthouse-ble { };
+
   lightify = callPackage ../development/python-modules/lightify { };
 
   lightning = callPackage ../development/python-modules/lightning { };
@@ -10667,6 +10679,8 @@ self: super: with self; {
   mapbox-earcut = callPackage ../development/python-modules/mapbox-earcut { };
 
   mapclassify = callPackage ../development/python-modules/mapclassify { };
+
+  marantz-rs232 = callPackage ../development/python-modules/marantz-rs232 { };
 
   mariadb = callPackage ../development/python-modules/mariadb { };
 
@@ -12670,6 +12684,8 @@ self: super: with self; {
   oic = callPackage ../development/python-modules/oic { };
 
   oinker = callPackage ../development/python-modules/oinker { };
+
+  okokscale = callPackage ../development/python-modules/okokscale { };
 
   okonomiyaki = callPackage ../development/python-modules/okonomiyaki { };
 
@@ -15690,6 +15706,8 @@ self: super: with self; {
 
   pyloggermanager = callPackage ../development/python-modules/pyloggermanager { };
 
+  pylondonair = callPackage ../development/python-modules/pylondonair { };
+
   pylookyloo = callPackage ../development/python-modules/pylookyloo { };
 
   pylpsd = callPackage ../development/python-modules/pylpsd { };
@@ -16565,6 +16583,8 @@ self: super: with self; {
   pysmartthings = callPackage ../development/python-modules/pysmartthings { };
 
   pysmarty2 = callPackage ../development/python-modules/pysmarty2 { };
+
+  pysmartyplants = callPackage ../development/python-modules/pysmartyplants { };
 
   pysmb = callPackage ../development/python-modules/pysmb { };
 
@@ -17497,6 +17517,8 @@ self: super: with self; {
 
   python-sat = callPackage ../development/python-modules/python-sat { };
 
+  python-sbom = callPackage ../development/python-modules/python-sbom { inherit (pkgs) cmake; };
+
   python-secp256k1-cardano = callPackage ../development/python-modules/python-secp256k1-cardano { };
 
   python-slugify = callPackage ../development/python-modules/python-slugify { };
@@ -18126,6 +18148,8 @@ self: super: with self; {
 
   railroad-diagrams = callPackage ../development/python-modules/railroad-diagrams { };
 
+  rainbowminer-api-client = callPackage ../development/python-modules/rainbowminer-api-client { };
+
   raincloudy = callPackage ../development/python-modules/raincloudy { };
 
   ramlfications = callPackage ../development/python-modules/ramlfications { };
@@ -18579,6 +18603,8 @@ self: super: with self; {
   riscv-model = callPackage ../development/python-modules/riscv-model { };
 
   ritassist = callPackage ../development/python-modules/ritassist { };
+
+  ritualsgenie = callPackage ../development/python-modules/ritualsgenie { };
 
   rivet = toPythonModule (pkgs.rivet.override { python3 = python; });
 
@@ -19170,6 +19196,8 @@ self: super: with self; {
 
   sense-energy = callPackage ../development/python-modules/sense-energy { };
 
+  sensecap-lorawan = callPackage ../development/python-modules/sensecap-lorawan { };
+
   sensirion-ble = callPackage ../development/python-modules/sensirion-ble { };
 
   sensor-state-data = callPackage ../development/python-modules/sensor-state-data { };
@@ -19338,6 +19366,8 @@ self: super: with self; {
   shlib = callPackage ../development/python-modules/shlib { };
 
   shodan = callPackage ../development/python-modules/shodan { };
+
+  shopify-spy = callPackage ../development/python-modules/shopify-spy { };
 
   shortuuid = callPackage ../development/python-modules/shortuuid { };
 
@@ -19509,6 +19539,8 @@ self: super: with self; {
   sklearn-deap = callPackage ../development/python-modules/sklearn-deap { };
 
   sklearn2pmml = callPackage ../development/python-modules/sklearn2pmml { };
+
+  skoda-public-api = callPackage ../development/python-modules/skoda-public-api { };
 
   skops = callPackage ../development/python-modules/skops { };
 
@@ -19784,6 +19816,8 @@ self: super: with self; {
   solidpython2 = callPackage ../development/python-modules/solidpython2 { };
 
   solo-python = callPackage ../development/python-modules/solo-python { };
+
+  solyx-energy-api-client = callPackage ../development/python-modules/solyx-energy-api-client { };
 
   somajo = callPackage ../development/python-modules/somajo { };
 
@@ -21652,8 +21686,6 @@ self: super: with self; {
 
   tuya-iot-py-sdk = callPackage ../development/python-modules/tuya-iot-py-sdk { };
 
-  tuyaha = callPackage ../development/python-modules/tuyaha { };
-
   tvdb-api = callPackage ../development/python-modules/tvdb-api { };
 
   tweepy = callPackage ../development/python-modules/tweepy { };
@@ -22618,11 +22650,7 @@ self: super: with self; {
 
   verlib2 = callPackage ../development/python-modules/verlib2 { };
 
-  vermin = (toPythonModule (pkgs.vermin.override { python3Packages = self; })).overrideAttrs (old: {
-    # hack to not cause a rebuild of python3Packages.python-discovery
-    # FIXME remove on staging
-    nativeBuildInputs = lib.remove pythonMetadataCheckHook old.nativeBuildInputs;
-  });
+  vermin = callPackage ../development/python-modules/vermin { };
 
   versioneer = callPackage ../development/python-modules/versioneer { };
 
@@ -23197,6 +23225,8 @@ self: super: with self; {
 
   xiaomi-ble = callPackage ../development/python-modules/xiaomi-ble { };
 
+  xiaomi-weather = callPackage ../development/python-modules/xiaomi-weather { };
+
   xkbcommon = callPackage ../development/python-modules/xkbcommon { };
 
   xkcdpass = callPackage ../development/python-modules/xkcdpass { };
@@ -23502,6 +23532,8 @@ self: super: with self; {
   zipfile2 = callPackage ../development/python-modules/zipfile2 { };
 
   zipp = callPackage ../development/python-modules/zipp { };
+
+  zipremove = callPackage ../development/python-modules/zipremove { };
 
   zipstream-ng = callPackage ../development/python-modules/zipstream-ng { };
 

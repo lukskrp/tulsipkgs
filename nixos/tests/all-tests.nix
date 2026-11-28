@@ -550,7 +550,6 @@ in
   deconz = runTest ./deconz.nix;
   deluge = runTest ./deluge.nix;
   dendrite = runTest ./matrix/dendrite.nix;
-  dep-scan = runTest ./dep-scan.nix;
   dependency-track = runTest ./dependency-track.nix;
   devpi-server = runTest ./devpi-server.nix;
   dex-oidc = runTest ./dex-oidc.nix;
@@ -604,10 +603,6 @@ in
   easytier-modular = runTest ./easytier-modular.nix;
   ec2-config = (handleTestOn [ "x86_64-linux" ] ./ec2.nix { }).boot-ec2-config or { };
   ec2-image = runTest ./ec2-image.nix;
-  ec2-image-systemd-boot = runTest {
-    imports = [ ./ec2-image.nix ];
-    _module.args.bootMode = "uefi";
-  };
   ec2-nixops = (handleTestOn [ "x86_64-linux" ] ./ec2.nix { }).boot-ec2-nixops or { };
   echoip = runTest ./echoip.nix;
   ejabberd = runTest ./xmpp/ejabberd.nix;
@@ -751,6 +746,7 @@ in
   gerrit = runTest ./gerrit.nix;
   getaddrinfo = runTest ./getaddrinfo.nix;
   geth = runTest ./geth.nix;
+  ghostfolio = runTest ./ghostfolio.nix;
   ghostunnel = runTest ./ghostunnel.nix;
   ghostunnel-modular = runTest ./ghostunnel-modular.nix;
   git-pages-modular = runTest ./git-pages.nix;
@@ -1342,6 +1338,11 @@ in
   ocsinventory-agent = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./ocsinventory-agent.nix { };
   octoprint = runTest ./octoprint.nix;
   oddjobd = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./oddjobd.nix { };
+  odhcpd = {
+    dhcp = runTest ./odhcpd/dhcp.nix;
+    interfaces = runTest ./odhcpd/interfaces.nix;
+    ra = runTest ./odhcpd/ra.nix;
+  };
   odoo17 = runTest {
     imports = [ ./odoo/single-process.nix ];
     _module.args.package = pkgs.odoo17;
